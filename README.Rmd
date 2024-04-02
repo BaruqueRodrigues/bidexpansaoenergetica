@@ -1,5 +1,20 @@
+---
+output: github_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # bidexpansaoenergetica
 
@@ -14,34 +29,35 @@ preliminares do Censo Demográfico 2022.
 Você pode instalar a versão de desenvolvimento do NomeDoPacote
 diretamente do GitHub com:
 
-``` r
+```{r, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("BaruqueRodrigues/bidexpansaoenergetica")
+
 ```
 
-## Funções Principais
+## Funções Principais 
 
 ### POF
 
 `baixa_pof()`: Baixa os dados da POF para os anos de 2018 e 2009.
 
-``` r
+```{r, eval=FALSE}
 baixa_pof(destination_dir = 'data-raw/POF/')
 ```
 
 `constroi_pof()`: Constrói um dataset consolidado com os dados da POF
 para o ano especifico.
 
-``` r
+```{r,eval = FALSE}
 constroi_pof(diretorio = 'data-raw/POF/2018/')
 ```
 
-### PNADc
+### PNADc 
 
 `baixa_visita_5_pnadc()`: Baixa os dados da 5ª visita da PNADc para um
 ano específico.
 
-``` r
+```{r, eval=FALSE}
 baixa_visita_5_pnadc(ano = 2016,
                      destination_dir = "data-raw/pnadc/2016/")
 ```
@@ -49,7 +65,7 @@ baixa_visita_5_pnadc(ano = 2016,
 `baixa_visita_1_pnadc()`: Baixa os dados da 1ª visita da PNADc para um
 ano específico.
 
-``` r
+```{r, eval=FALSE}
 baixa_visita_1_pnadc(ano = 2016,
                      destination_dir = "data-raw/pnadc/2016/")
 ```
@@ -57,18 +73,18 @@ baixa_visita_1_pnadc(ano = 2016,
 `constroi_pnad()`: Combina os dados da 1ª e 5ª visita da PNADc,
 preparando-os para análise.
 
-``` r
+```{r, eval=FALSE}
 constroi_pnad(ano = 2016,
                      destination_dir = "data-raw/pnadc/2016/")
 ```
 
-### Censo 2022
+### Censo 2022 
 
 `baixa_censo()`: Baixa e prepara os dados agregados preliminares do
 Censo Demográfico 2022 do IBGE. Uso Aqui está um exemplo básico de como
 usar baixa_censo():
 
-``` r
+```{r, eval=FALSE}
  library(bidexpansaoenergetica) 
 dados_censo <- baixa_censo(destination_dir = 'data-raw/censo-ibge-2022/') 
 
@@ -84,5 +100,5 @@ CONTRIBUTING.md para mais detalhes e envie pull requests para nós.
 Licença Este pacote é distribuído sob a licença MIT. Veja o arquivo
 LICENSE para mais detalhes.
 
-Autores Seu Nome (<a href="mailto:e-mail@exemplo.com"
-class="email">quemuel.baruque@ufpe.br</a>)
+Autores Seu Nome
+([quemuel.baruque\@ufpe.br](mailto:e-mail@exemplo.com){.email})

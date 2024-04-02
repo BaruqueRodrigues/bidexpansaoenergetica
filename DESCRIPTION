@@ -1,0 +1,26 @@
+Package: bidexpansaoenergetica
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    archive,
+    dplyr,
+    janitor,
+    magrittr,
+    PNADcIBGE,
+    purrr,
+    readr,
+    readxl,
+    stringr,
+    tidyr,
+    utils
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.2.3
