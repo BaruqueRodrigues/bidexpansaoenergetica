@@ -103,7 +103,7 @@ constroi_pof <- function(diretorio = 'data-raw/POF/2018/'){
   )
 
   # junta as multiplas tabelas em uma tabela unica
-  pof <- reduce(pof[order(purrr::map_dbl(pof, nrow), decreasing = TRUE)],
+  pof <- purrr::reduce(pof[order(purrr::map_dbl(pof, nrow), decreasing = TRUE)],
                 left_join, join_by(cod_upa, num_dom), multiple = "first")
   # dataset POF
   pof %>%
