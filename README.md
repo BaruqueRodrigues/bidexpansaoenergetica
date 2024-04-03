@@ -59,7 +59,7 @@ preparando-os para análise.
 
 ``` r
 constroi_pnad(ano = 2016,
-                     destination_dir = "data-raw/pnadc/2016/")
+                     diretorio = "data-raw/pnadc/2016/")
 ```
 
 ### Censo 2022
