@@ -17,18 +17,23 @@
 
 carregar_para_sql <- function(dataframe, nome_tabela, servidor, database, porta) {
   # Função para carregar o dataframe no SQL Server com parâmetros de conexão dinâmicos
-  # Check the operating system
-  if (Sys.info()["sysname"] == "Windows")
-  {
-    Sys.setlocale("LC_CTYPE", "Portuguese_Brazil.UTF-8")  # Change to the appropriate locale
+  # Define a função para configurar a localidade baseada no sistema operacional
+  set_locale_based_on_os <- function() {
+    sys_name <- Sys.info()["sysname"]
 
-  } else if (Sys.info()["sysname"] == "Darwin" || Sys.info()["sysname"] == "Linux")
-  {
-    Sys.setlocale(category="LC_CTYPE", locale="pt_BR.UTF-8")
-  } else
-  {
-    print("Unsupported operating system.")
+    if (sys_name == "Windows") {
+      # Para Windows, ajusta a codificação para escrita de nomes com acentuação
+      Sys.setlocale("LC_CTYPE", "Portuguese_Brazil.UTF-8")
+    } else if (sys_name %in% c("Darwin", "Linux")) {
+      # Para macOS (Darwin) e Linux, ajusta a codificação para nomes com acentuação
+      Sys.setlocale(category="LC_CTYPE", locale="pt_BR.UTF-8")
+    } else {
+      print("Unsupported operating system.")
+    }
   }
+
+  # Chama a função para configurar a localidade
+  set_locale_based_on_os()
 
   # Função para conectar ao SQL Server com parâmetros dinâmicos
   conectar_sql_server <- function(servidor, database) {
