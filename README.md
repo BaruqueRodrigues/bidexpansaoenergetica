@@ -11,7 +11,7 @@ preliminares do Censo Demográfico 2022.
 
 ## Instalação
 
-Você pode instalar a versão de desenvolvimento do bidexpansaoenergetica
+Você pode instalar a versão de desenvolvimento do NomeDoPacote
 diretamente do GitHub com:
 
 ``` r
