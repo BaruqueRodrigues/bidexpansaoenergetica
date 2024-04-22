@@ -7,6 +7,7 @@
 #' @param servidor Endereço do servidor SQL Server.
 #' @param database Nome do banco de dados no servidor.
 #'
+#' @export
 #' @details
 #' A função primeiro verifica o sistema operacional para ajustar a localidade para leitura de arquivos com caracteres especiais.
 #' Em seguida, usa a função `conectar_sql_server` para estabelecer uma conexão com o banco de dados e a função `carregar_para_sql` para enviar os dados do dataframe para a tabela especificada no banco de dados.
