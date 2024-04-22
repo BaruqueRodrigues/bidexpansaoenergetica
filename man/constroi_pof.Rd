@@ -21,8 +21,3 @@ para o ano especificado, baseando-se em um conjunto de variáveis de interesse. 
 texto baseada em um dicionário de variáveis, seleciona variáveis específicas, limpa nomes de colunas, e junta múltiplos
 datasets em uma única tabela.
 }
-\examples{
-pof_consolidado <- constroi_pof()
-head(pof_consolidado)
-
-}

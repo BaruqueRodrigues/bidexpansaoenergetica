@@ -19,7 +19,3 @@ Esta função automatiza o processo de download do dicionário, arquivo de input
 para a 5ª visita da Pesquisa Nacional por Amostra de Domicílios Contínua (PNADc) de um ano específico.
 Os arquivos são salvos em um diretório especificado.
 }
-\examples{
-baixa_visita_5_pnadc(ano = 2016, destination_dir = "data-raw/pnadc/2016/")
-
-}

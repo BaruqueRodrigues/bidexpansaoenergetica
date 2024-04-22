@@ -26,8 +26,3 @@ Amostra de Domicílios Contínua (PNADc) para um ano específico, aplicando rotu
 e selecionando variáveis de interesse. A função facilita o processo de preparação
 dos dados para análises subsequentes.
 }
-\examples{
-# Supondo que os arquivos da PNADc para 2018 estejam no diretório 'pnadc_2018'
-pnad_consolidado <- constroi_pnad(diretorio = 'pnadc_2018', ano = 2018)
-
-}

@@ -14,6 +14,8 @@ carregar_para_sql(dataframe, nome_tabela, servidor, database, porta)
 \item{servidor}{Endereço do servidor SQL Server.}
 
 \item{database}{Nome do banco de dados no servidor.}
+
+\item{porta}{porta de conexão com o servidor.}
 }
 \description{
 Esta função verifica o sistema operacional, configura a localidade apropriada e utiliza duas funções auxiliares para conectar ao SQL Server e carregar dados de um dataframe especificado para uma tabela do banco de dados.

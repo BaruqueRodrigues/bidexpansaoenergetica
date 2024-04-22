@@ -19,7 +19,3 @@ Esta função automatiza o download dos dados agregados por setores censitários
 do Censo Demográfico 2022 do IBGE. Ela baixa o arquivo zip do website do IBGE, extrai o conteúdo
 no diretório especificado e carrega o arquivo CSV resultante, limpando os nomes das colunas.
 }
-\examples{
-dados_censo <- baixa_censo(destination_dir = 'meu_diretorio_de_dados/censo-ibge-2022/')
-head(dados_censo)
-}

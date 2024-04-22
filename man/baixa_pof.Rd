@@ -24,8 +24,3 @@ da Pesquisa de Orçamentos Familiares (POF) para os anos de 2018 e 2009. Os arqu
 baixados diretamente dos repositórios do IBGE e extraídos em diretórios específicos
 dentro do diretório de destino fornecido.
 }
-\examples{
-baixa_pof() # Baixa e extrai os dados da POF para o diretório padrão 'data-raw/POF/'
-baixa_pof('meu_diretorio_de_dados/') # Especifica um diretório diferente para o download e extração dos dados
-
-}

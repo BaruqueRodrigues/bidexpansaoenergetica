@@ -6,6 +6,7 @@
 #' @param nome_tabela Nome da tabela dentro do banco de dados onde os dados serão inseridos.
 #' @param servidor Endereço do servidor SQL Server.
 #' @param database Nome do banco de dados no servidor.
+#' @param porta porta de conexão com o servidor.
 #'
 #' @export
 #' @details

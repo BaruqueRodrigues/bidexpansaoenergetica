@@ -1,35 +1,50 @@
-# Clear all variables
-rm(list=ls())
+#' Constrói um Dataset Consolidado da POF
+#'
+#' Esta função automatiza o processo de leitura e combinação de múltiplos datasets da Pesquisa de Orçamentos Familiares (POF)
+#' para o ano especificado, baseando-se em um conjunto de variáveis de interesse. Ela realiza a leitura de arquivos
+#' texto baseada em um dicionário de variáveis, seleciona variáveis específicas, limpa nomes de colunas, e junta múltiplos
+#' datasets em uma única tabela.
+#'
+#' @param diretorio O caminho do diretório onde os arquivos de dados da POF estão localizados. Por padrão,
+#' é 'data-raw/POF/2018/'. Espera-se que este diretório contenha subdiretórios e arquivos específicos conforme
+#' a estrutura utilizada pela POF para armazenamento de dados e metadados.
+#'
+#' @return Um tibble que representa a tabela única consolidada com os dados da POF, incluindo variáveis selecionadas
+#' e processadas conforme especificado.
+#'
+#' @examples
 
-#Sys.setlocale(category="LC_CTYPE", locale="pt_BR.UTF-8")
+#' @importFrom magrittr "%>%"
+#' @export
+#'
+constroi_pof <- function(diretorio = 'data-raw/POF/2018/'){
 
-# Check the operating system
-if (Sys.info()["sysname"] == "Windows") 
-{
-  # For Windows, set encoding for writing names with accentuation
-  Sys.setlocale("LC_CTYPE", "Portuguese_Brazil.UTF-8")  # Change to the appropriate locale
-  
-} else if (Sys.info()["sysname"] == "Darwin" || Sys.info()["sysname"] == "Linux") 
-{  # macOS (iOS not directly supported in R)
-  # For macOS (Darwin), convert names with accentuation to names without accentuation
-  #Sys.setlocale(category="LC_CTYPE", locale="en_US.UTF-8")
-  Sys.setlocale(category="LC_CTYPE", locale="pt_BR.UTF-8")
-} else 
-{
-  print("Unsupported operating system.")
-}
+  # Check the operating system
+  if (Sys.info()["sysname"] == "Windows")
+  {
+    # For Windows, set encoding for writing names with accentuation
+    Sys.setlocale("LC_CTYPE", "Portuguese_Brazil.UTF-8")  # Change to the appropriate locale
 
-constroi_pof <- function(diretorio = 'data/POF/2018/'){
-  
+  } else if (Sys.info()["sysname"] == "Darwin" || Sys.info()["sysname"] == "Linux")
+  {  # macOS (iOS not directly supported in R)
+    # For macOS (Darwin), convert names with accentuation to names without accentuation
+    #Sys.setlocale(category="LC_CTYPE", locale="en_US.UTF-8")
+    Sys.setlocale(category="LC_CTYPE", locale="pt_BR.UTF-8")
+  } else
+  {
+    print("Unsupported operating system.")
+  }
+
+
   # pega os valores únicos indicados em Indicadas no documento
   #Sistematização de Dados Tecendo Conexões
   val_unicos <- variaveis_pof$subtabela %>% unique()
   caminho_dicionario = paste0(diretorio,
                               'dicionario/Dicionários de váriaveis.xls')
-  
-  
-  
-  
+
+
+
+
   # Gera uma tabela leitura que indica quais datasets serão lidos e carregados
   tabela_leitura <- dplyr::tibble(
     diretorio = list.files(diretorio, pattern = "txt", full.names = TRUE),
@@ -40,15 +55,15 @@ constroi_pof <- function(diretorio = 'data/POF/2018/'){
   ) %>%
     #Seleciona apenas os valores indicados no documento para serem carregados
     dplyr::filter(nome_aba %in% val_unicos)
-  
+
   # Carrega os datasets da pof em uma lista
   pof <- purrr::map2(tabela_leitura$diretorio, tabela_leitura$nome_aba,
                      ~ {
                        # Definindo o nome da aba baseado no nome do arquivo
                        nome_aba <- .y %>% unique()
-                       
+
                        # Lendo o dicionário de variáveis para o arquivo atual
-                       dimensoes_dicionario <- readxl::read_excel('data/POF/2018/dicionario/Dicionários de váriaveis.xls',
+                       dimensoes_dicionario <- readxl::read_excel('data-raw/POF/2018/dicionario/Dicionários de váriaveis.xls',
                                                                   sheet = nome_aba, skip = 3) %>%
                          purrr::set_names(
                            c("posicao_inicial", "tamanho", "decimais",
@@ -58,12 +73,12 @@ constroi_pof <- function(diretorio = 'data/POF/2018/'){
                          dplyr::mutate(
                            dplyr::across(1:3, as.integer)
                          )
-                       
+
                        # Construindo o caminho completo do arquivo
                        arquivo_completo <- .x
-                       
+
                        message(nome_aba, paste0(" Carregada"))
-                       
+
                        # Importando o arquivo .txt com base nas especificações do dicionário
                        dataset <- readr::read_fwf(arquivo_completo,
                                                   readr::fwf_widths(
@@ -73,7 +88,7 @@ constroi_pof <- function(diretorio = 'data/POF/2018/'){
                        ) %>%
                          dplyr::select(
                            dplyr::any_of(
-                             
+
                              c(variaveis_pof %>%
                                  dplyr::filter(
                                    subtabela == nome_aba
@@ -89,22 +104,22 @@ constroi_pof <- function(diretorio = 'data/POF/2018/'){
                              as.character
                            )
                          )
-                       
-                       
-                       
+
+
+
                        # assign(.x %>%
                        #          stringr::str_to_lower() %>%
                        #          stringr::str_extract( "(?<=/)[^/]+(?=\\.txt)"),
                        #        dataset,
                        #        envir = .GlobalEnv)
-                       
-                       
+
+
                      }
   )
-  
+
   # junta as multiplas tabelas em uma tabela unica
   pof <- purrr::reduce(pof[order(purrr::map_dbl(pof, nrow), decreasing = TRUE)],
-                       left_join, join_by(cod_upa, num_dom), multiple = "first")
+                left_join, join_by(cod_upa, num_dom), multiple = "first")
   # dataset POF
   pof %>%
     dplyr::select(
@@ -139,5 +154,5 @@ constroi_pof <- function(diretorio = 'data/POF/2018/'){
       v8000_defla = as.character(v8000_defla),
       peso = as.character(peso),
     )
-  
+
 }
