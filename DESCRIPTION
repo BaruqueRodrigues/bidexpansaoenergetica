@@ -11,9 +11,11 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     archive,
+    DBI,
     dplyr,
     janitor,
     magrittr,
+    odbc,
     PNADcIBGE,
     purrr,
     readr,
