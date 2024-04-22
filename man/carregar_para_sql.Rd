@@ -7,7 +7,7 @@
 carregar_para_sql(dataframe, nome_tabela, servidor, database, porta)
 }
 \arguments{
-\item{dataframe}{Caminho para o arquivo CSV, separado por ";" que contém os dados a serem enviados para o banco de dados.}
+\item{dataframe}{dataset a ser carregado no ambiente do R para o SQL server}
 
 \item{nome_tabela}{Nome da tabela dentro do banco de dados onde os dados serão inseridos.}
 
