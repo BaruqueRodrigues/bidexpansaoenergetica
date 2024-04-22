@@ -19,39 +19,29 @@ if (Sys.info()["sysname"] == "Windows")
   print("Unsupported operating system.")
 }
 
-baixa_visita_1_pnadc <- function(
-    ano = 2018,
-    destination_dir = "data/pnadc/2018/"){
+baixa_visita_5_pnadc <- function(ano = 2016,
+                                 destination_dir = "data/pnadc/2016/"){
   
   ## Baixando o Dicionário ---------------------------------------------------
+  
   #destination_dir <- paste0("data-raw/pnadc/", ano, "/")
   
   if (!dir.exists(destination_dir)) {
     dir.create(destination_dir, recursive = TRUE)
   }
-  
   # Caminho onde o arquivo será salvo
-  dictionary_path <- dplyr::case_when(
-    ano <= 2018 ~ paste0("dicionario_PNADC_microdados_", ano ,"_visita1_20220224.xls"),
-    ano == 2019 ~ paste0("dicionario_PNADC_microdados_", ano ,"_visita1_20230811.xls"),
-    ano == 2022 ~ paste0("dicionario_PNADC_microdados_", ano ,"_visita1_20231129.xls")
-  )
-  
-  input_path <- dplyr::case_when(
-    ano <= 2018 ~ paste0("input_PNADC_", ano ,"_visita1_20220224.txt"),
-    ano == 2019 ~ paste0("input_PNADC_", ano ,"_visita1_20230811.txt"),
-    ano == 2022 ~ paste0("input_PNADC_", ano ,"_visita1_20231129.txt")
-  )
+  dictionary_path <- paste0('dicionario_PNADC_microdados_', ano, '_visita5_20231220.xls')
+  input_path <- paste0('input_PNADC_', ano, '_visita5_20231222.txt')
   
   # Definindo o URL do dicionário
   dictionary_url <- paste0(
-    "https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_1/Documentacao/",
+    "https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_5/Documentacao/",
     dictionary_path
   )
   
   input_url <-
     paste0(
-      "https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_1/Documentacao/",
+      "https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_5/Documentacao/",
       input_path
     )
   
@@ -65,26 +55,19 @@ baixa_visita_1_pnadc <- function(
   
   ## Baixa Microdados --------------------------------
   
-  microdados_path <- dplyr::case_when(
-    ano <= 2018 ~ paste0("PNADC_", ano ,"_visita1_20220916.zip"),
-    ano == 2019 ~ paste0("PNADC_", ano ,"_visita1_20230511.zip"),
-    ano == 2022 ~ paste0("PNADC_", ano ,"_visita1_20231129.zip")
-  )
-  
+  microdados_path <- paste0("PNADC_", ano ,"_visita5_20231222.zip")
   
   url_microdados <- paste0(
-    "https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_1/Dados/",
+    "https://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Anual/Microdados/Visita/Visita_5/Dados/",
     microdados_path)
   
-  download.file(url = url_microdados,
-                destfile = paste0(destination_dir,
-                                  microdados_path),
-                mode = "wb", timeout = 300)
+  download.file(url_microdados,
+                paste0(destination_dir,
+                       microdados_path),
+                mode = 'wb',
+                timeout = 300)
   
   # Descompactando o arquivo
   
   unzip(paste0(destination_dir,microdados_path), exdir = destination_dir)
-  
 }
-
-baixa_visita_1_pnadc()
