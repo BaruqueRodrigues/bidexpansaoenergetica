@@ -61,13 +61,13 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/'){
                                                     widths = dimensoes_dicionario$tamanho,
                                                     col_names = dimensoes_dicionario$codigo_da_variavel
                                                   )
-                       ) %>%
-                         dplyr::select(
-                           dplyr::any_of(
-                             c(variaveis_pof %>% dplyr::filter(subtabela == nome_aba) %>% dplyr::pull(variaveis),
-                               "COD_UPA", "NUM_DOM")
-                           )
-                         ) #%>%
+                       ) # %>%
+                       #  dplyr::select(
+                       #    dplyr::any_of(
+                       #      c(variaveis_pof %>% dplyr::filter(subtabela == nome_aba) %>% dplyr::pull(variaveis),
+                       #        "COD_UPA", "NUM_DOM")
+                       #    )
+                       #  ) %>%
                          #janitor::clean_names() %>%
                          #dplyr::mutate(dplyr::across(c(cod_upa, num_dom), as.character))
 
