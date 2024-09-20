@@ -1,23 +1,4 @@
-#' Constrói Datasets da POF
-#'
-#' Esta função automatiza o processo de leitura de múltiplos datasets da Pesquisa de Orçamentos Familiares (POF)
-#' para o ano especificado, baseando-se em um conjunto de variáveis de interesse. Ela realiza a leitura de arquivos
-#' texto baseada em um dicionário de variáveis, seleciona variáveis específicas, limpa nomes de colunas, e retorna
-#' uma lista de tibbles, onde cada tibble representa um dataset da POF.
-#'
-#' @param diretorio O caminho do diretório onde os arquivos de dados da POF estão localizados. Por padrão,
-#' é 'data-raw/POF/2018/'. Espera-se que este diretório contenha subdiretórios e arquivos específicos conforme
-#' a estrutura utilizada pela POF para armazenamento de dados e metadados.
-#'
-#' @return Uma lista de tibbles, onde cada tibble representa um dataset da POF, incluindo variáveis selecionadas
-#' e processadas conforme especificado.
-#'
-#' @examples
-
-#' @importFrom magrittr "%>%"
-#' @export
-#'
-constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/'){
+constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
 
   set_locale_based_on_os <- function() {
     sys_name <- Sys.info()["sysname"]
@@ -36,11 +17,22 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/'){
   val_unicos <- variaveis_pof$subtabela %>% unique()
   caminho_dicionario = paste0(diretorio, 'dicionario/Dicionários de váriaveis.xls')
 
-  tabela_leitura <- dplyr::tibble(
-    diretorio = list.files(diretorio, pattern = "txt", full.names = TRUE),
-    nome_aba = readxl::excel_sheets(path = caminho_dicionario) %>% sort()
-  ) #%>%
-  #dplyr::filter(nome_aba %in% val_unicos)
+  if (diretorio == 'data-raw/POF/2009/') {
+    tabela_leitura <- dplyr::tibble(
+      diretorio = list.files(diretorio, pattern = "txt", full.names = TRUE),
+      nome_aba = c("Aluguel Estimado", "Caderneta de Despesa", "Condições de vida ",
+                   "Consumo Alimentar", "Despesas de 12 meses", "Despesas de 90 dias",
+                   "Despesa Individual", "Despesa com Veículos",
+                   "Domicílio", "Inventário", "Morador_Imput",
+                   "Morador - Qualidade de Vida ", "Morador", "Outras Despesas",
+                   "Outros Rendimentos", "Rendimentos do trabalho", "Despesas com Serviços Domésticos")
+    )
+  } else {
+    tabela_leitura <- dplyr::tibble(
+      diretorio = list.files(diretorio, pattern = "txt", full.names = TRUE),
+      nome_aba = readxl::excel_sheets(path = caminho_dicionario) %>% sort()
+    )
+  }
 
   pof <- purrr::map2(tabela_leitura$diretorio, tabela_leitura$nome_aba,
                      ~ {
@@ -61,15 +53,7 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/'){
                                                     widths = dimensoes_dicionario$tamanho,
                                                     col_names = dimensoes_dicionario$codigo_da_variavel
                                                   )
-                       ) # %>%
-                       #  dplyr::select(
-                       #    dplyr::any_of(
-                       #      c(variaveis_pof %>% dplyr::filter(subtabela == nome_aba) %>% dplyr::pull(variaveis),
-                       #        "COD_UPA", "NUM_DOM")
-                       #    )
-                       #  ) %>%
-                         #janitor::clean_names() %>%
-                         #dplyr::mutate(dplyr::across(c(cod_upa, num_dom), as.character))
+                       )
 
                        return(dataset)
                      }
