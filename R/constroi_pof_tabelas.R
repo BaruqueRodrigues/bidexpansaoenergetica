@@ -1,3 +1,28 @@
+#' Constroi Tabelas da POF
+#'
+#' Esta função automatiza a leitura e carregamento das tabelas da Pesquisa de Orçamentos Familiares (POF) a partir de um diretório especificado.
+#' Ela ajusta a leitura de dicionários de dimensões conforme necessário, incluindo a necessidade de \code{skip = 2} para a tabela "Morador - Qualidade de Vida".
+#'
+#' @param diretorio Um diretório contendo os arquivos da POF. O padrão é 'data-raw/POF/2018/'.
+#'
+#' @details
+#' A função detecta o sistema operacional e ajusta o `locale` apropriado para evitar problemas de encoding na leitura dos dados.
+#' Para a tabela "Morador - Qualidade de Vida", é necessário pular duas linhas no dicionário de variáveis, enquanto para as demais tabelas o padrão é \code{skip = 3}.
+#' Os arquivos de dados são lidos em formato de largura fixa (\code{fwf}), com as larguras e nomes das colunas definidos com base nos dicionários de variáveis.
+#'
+#' @return Um \code{list} de \code{data.frame}s, onde cada \code{data.frame} corresponde a uma tabela da POF.
+#'
+#' @examples
+#' \dontrun{
+#' # Exemplo de uso da função:
+#' pof_datasets <- constroi_pof_tabelas(diretorio = 'data-raw/POF/2018/')
+#' }
+#'
+#' @export
+constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
+  # Função aqui
+}
+
 constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
 
   set_locale_based_on_os <- function() {
@@ -38,8 +63,11 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
                      ~ {
                        nome_aba <- .y %>% unique()
 
+                       # Verifica se a tabela é "Morador - Qualidade de Vida " e ajusta o skip
+                       skip_value <- ifelse(nome_aba == "Morador - Qualidade de Vida ", 2, 3)
+
                        dimensoes_dicionario <- readxl::read_excel(caminho_dicionario,
-                                                                  sheet = nome_aba, skip = 3) %>%
+                                                                  sheet = nome_aba, skip = skip_value) %>%
                          purrr::set_names(c("posicao_inicial", "tamanho", "decimais", "codigo_da_variavel", "descricao", "categorias")) %>%
                          tidyr::drop_na(posicao_inicial) %>%
                          dplyr::mutate(dplyr::across(1:3, as.integer))
