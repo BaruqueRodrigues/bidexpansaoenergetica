@@ -63,6 +63,7 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
                      ~ {
                        nome_aba <- .y %>% unique()
 
+                       if(diretorio == 'data-raw/POF/2009/'){
                        # Verifica se a tabela é "Morador - Qualidade de Vida " e ajusta o skip
                        skip_value <- ifelse(nome_aba == "Morador - Qualidade de Vida ", 2, 3)
 
@@ -82,6 +83,28 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
                                                     col_names = dimensoes_dicionario$codigo_da_variavel
                                                   )
                        )
+                       }
+                       if(diretorio == 'data-raw/POF/2018/'){
+                         # Verifica se a tabela é "Morador - Qualidade de Vida " e ajusta o skip
+                         skip_value <- ifelse(nome_aba %in% c("Morador - Qualidade de Vida", "Condições de Vida"), 2, 3)
+
+                         dimensoes_dicionario <- readxl::read_excel(caminho_dicionario,
+                                                                    sheet = nome_aba, skip = skip_value) %>%
+                           purrr::set_names(c("posicao_inicial", "tamanho", "decimais", "codigo_da_variavel", "descricao", "categorias")) %>%
+                           tidyr::drop_na(posicao_inicial) %>%
+                           dplyr::mutate(dplyr::across(1:3, as.integer))
+
+                         arquivo_completo <- .x
+
+                         message(nome_aba, " Carregada")
+
+                         dataset <- readr::read_fwf(arquivo_completo,
+                                                    readr::fwf_widths(
+                                                      widths = dimensoes_dicionario$tamanho,
+                                                      col_names = dimensoes_dicionario$codigo_da_variavel
+                                                    )
+                         )
+                       }
 
                        return(dataset)
                      }
