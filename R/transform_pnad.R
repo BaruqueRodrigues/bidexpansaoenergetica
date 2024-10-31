@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{
 #' transform_pnad(
-#'   pnad_data = bidexpansaoenergetica::pnad2019
+#'   pnad_data = pnad2019
 #' )
 #' }
 #' @export

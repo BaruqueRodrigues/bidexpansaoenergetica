@@ -2,22 +2,29 @@
 % Please edit documentation in R/constroi_pof_tabelas.R
 \name{constroi_pof_tabelas}
 \alias{constroi_pof_tabelas}
-\title{Constrói Datasets da POF}
+\title{Constroi Tabelas da POF}
 \usage{
 constroi_pof_tabelas(diretorio = "data-raw/POF/2018/")
 }
 \arguments{
-\item{diretorio}{O caminho do diretório onde os arquivos de dados da POF estão localizados. Por padrão,
-é 'data-raw/POF/2018/'. Espera-se que este diretório contenha subdiretórios e arquivos específicos conforme
-a estrutura utilizada pela POF para armazenamento de dados e metadados.}
+\item{diretorio}{Um diretório contendo os arquivos da POF. O padrão é 'data-raw/POF/2018/'.}
 }
 \value{
-Uma lista de tibbles, onde cada tibble representa um dataset da POF, incluindo variáveis selecionadas
-e processadas conforme especificado.
+Um \code{list} de \code{data.frame}s, onde cada \code{data.frame} corresponde a uma tabela da POF.
 }
 \description{
-Esta função automatiza o processo de leitura de múltiplos datasets da Pesquisa de Orçamentos Familiares (POF)
-para o ano especificado, baseando-se em um conjunto de variáveis de interesse. Ela realiza a leitura de arquivos
-texto baseada em um dicionário de variáveis, seleciona variáveis específicas, limpa nomes de colunas, e retorna
-uma lista de tibbles, onde cada tibble representa um dataset da POF.
+Esta função automatiza a leitura e carregamento das tabelas da Pesquisa de Orçamentos Familiares (POF) a partir de um diretório especificado.
+Ela ajusta a leitura de dicionários de dimensões conforme necessário, incluindo a necessidade de \code{skip = 2} para a tabela "Morador - Qualidade de Vida".
+}
+\details{
+A função detecta o sistema operacional e ajusta o `locale` apropriado para evitar problemas de encoding na leitura dos dados.
+Para a tabela "Morador - Qualidade de Vida", é necessário pular duas linhas no dicionário de variáveis, enquanto para as demais tabelas o padrão é \code{skip = 3}.
+Os arquivos de dados são lidos em formato de largura fixa (\code{fwf}), com as larguras e nomes das colunas definidos com base nos dicionários de variáveis.
+}
+\examples{
+\dontrun{
+# Exemplo de uso da função:
+pof_datasets <- constroi_pof_tabelas(diretorio = 'data-raw/POF/2018/')
+}
+
 }

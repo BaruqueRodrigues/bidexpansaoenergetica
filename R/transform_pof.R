@@ -16,7 +16,7 @@
 #' @examples
 #' \dontrun{
 #' transform_pof(
-#'   pof_data = bidexpansaoenergetica::pof2009,
+#'   pof_data = pof2009,
 #'   pof_tables_names = names(pof2009),
 #'   2009
 #' )
