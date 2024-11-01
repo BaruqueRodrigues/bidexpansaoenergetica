@@ -479,7 +479,7 @@ transform_pof <- function(pof_data, pof_year){
             V61075 # correspondencia proxima a V0215 mas não tem as mesmas dimensões
           ) %>%
           dplyr::rename(COD_INFORMANTE_RESP_COND_VIDA = COD_INFORMANTE) %>%
-          dplyr::mutate(UF = str_sub(COD_UPA, 1, 2) %>% as.numeric(),
+          dplyr::mutate(UF = stringr::str_sub(COD_UPA, 1, 2) %>% as.numeric(),
                         across(c(COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL), as.numeric))
         ## Morador ------------------------------------------------------------------
       } else if (pof_tables_names == "Morador") {
@@ -503,7 +503,7 @@ transform_pof <- function(pof_data, pof_year){
             NIVEL_INSTRUCAO_MORADOR,
             V0438 # corresponde a V0406 da tabela de morador
           ) %>%
-          dplyr::mutate(UF = str_sub(COD_UPA, 1, 2) %>% as.numeric()) %>%
+          dplyr::mutate(UF = stringr::str_sub(COD_UPA, 1, 2) %>% as.numeric()) %>%
           #add NUMERO_PESSOAS_DOMICILIO
           #dplyr::filter(COND_UNIDADE_CONSUMO ==1) %>%
           dplyr::left_join(pof_data |>
@@ -832,7 +832,7 @@ transform_pof <- function(pof_data, pof_year){
             RENDA_TOTAL
           ) %>%
           dplyr::filter(COD_TIPO_OCUP == 1) %>%
-          dplyr::mutate(UF = str_sub(COD_UPA, 1, 2) %>% as.numeric()) %>%
+          dplyr::mutate(UF = stringr::str_sub(COD_UPA, 1, 2) %>% as.numeric()) %>%
           dplyr::select(UF, COD_UPA, NUM_DOM, NUM_UC, COD_INFORMANTE, V5303, PESO_FINAL)
 
         ### Domicílio ---------------------------------------------------------------
@@ -875,7 +875,7 @@ transform_pof <- function(pof_data, pof_year){
             V0223, # Pavimentacao na rua
             PESO_FINAL
           ) %>%
-          dplyr::mutate(UF = str_sub(COD_UPA, 1, 2) %>% as.numeric())
+          dplyr::mutate(UF = stringr::str_sub(COD_UPA, 1, 2) %>% as.numeric())
         ### Outros Rendimentos ------------------------------------------------------
       } else if (pof_tables_names == "Outros Rendimentos") {
         pof_data <- pof_data %>%
