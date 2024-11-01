@@ -478,7 +478,7 @@ transform_pof <- function(pof_data, pof_year){
             V6104, # correspondencia proxima a V6199 mas não tem as mesmas dimensões
             V61075 # correspondencia proxima a V0215 mas não tem as mesmas dimensões
           ) %>%
-          rename(COD_INFORMANTE_RESP_COND_VIDA = COD_INFORMANTE) %>%
+          dplyr::rename(COD_INFORMANTE_RESP_COND_VIDA = COD_INFORMANTE) %>%
           dplyr::mutate(UF = str_sub(COD_UPA, 1, 2) %>% as.numeric(),
                         across(c(COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL), as.numeric))
         ## Morador ------------------------------------------------------------------
@@ -506,7 +506,7 @@ transform_pof <- function(pof_data, pof_year){
           dplyr::mutate(UF = str_sub(COD_UPA, 1, 2) %>% as.numeric()) %>%
           #add NUMERO_PESSOAS_DOMICILIO
           #dplyr::filter(COND_UNIDADE_CONSUMO ==1) %>%
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::mutate(
                         # [DF0101]
                         V0403_ate12 = ifelse(IDADE_ANOS <= 12, 1, 0),
@@ -539,13 +539,13 @@ transform_pof <- function(pof_data, pof_year){
           dplyr::filter(COND_UNIDADE_CONSUMO ==1) %>%
 
           #[DF0301] =  NUMERO_PESSOAS_DOMICILIO
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::group_by(COD_UF, COD_UPA, NUM_DOM, NUM_UC) |>
                       dplyr::summarise(NUMERO_PESSOAS_DOMICILIO = n_distinct(COD_INFORMANTE)),
                     by = join_by(COD_UF, COD_UPA, NUM_DOM, NUM_UC)) |>
           #add QTD_PESSOAS_PER_FAMILIA (without Domestic employee and relatives)
           #diferença de apenas 55 linhas
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       #dplyr::filter(!(COND_UNIDADE_CONSUMO %in% c(18,19))) |>
                       dplyr::group_by(COD_UF, COD_UPA, NUM_DOM, NUM_UC) |>
                       dplyr::summarise(NUMERO_PESSOAS_FAMILIA = n_distinct(COD_INFORMANTE)),
@@ -566,8 +566,8 @@ transform_pof <- function(pof_data, pof_year){
             PESO_FINAL
           ) %>%
           dplyr::select(-COD_INFORMANTE,-TIPO_SITUACAO_REG) %>%
-          drop_na(NUM_UC) %>%
-          distinct(COD_UPA, NUM_DOM, NUM_UC, .keep_all = TRUE)
+          tidyr::drop_na(NUM_UC) %>%
+          dplyr::distinct(COD_UPA, NUM_DOM, NUM_UC, .keep_all = TRUE)
 
         ### Despesa Individual ------------------------------------------------------
       } else if (pof_tables_names == "Despesa Individual") {
@@ -654,34 +654,34 @@ transform_pof <- function(pof_data, pof_year){
         # Finalizando cálculos previos para IT01
         pof_data <- pof_data %>%
           #[IT0101] - cálculos prévios: mediana por UF
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::group_by(COD_UF) |>
                       dplyr::filter(DI_somaDesp_transpPrivado > 0) |>
                       dplyr::summarise(DI_somaDesp_transpPrivado_mdUF = median(DI_somaDesp_transpPrivado)),
                     by = join_by(COD_UF)) |>
           #[IT0101] + cálculos prévios: mediana BR)
-          bind_cols( pof_data |>
+          dplyr::bind_cols( pof_data |>
                        dplyr::filter(DI_somaDesp_transpPrivado > 0) |>
                        dplyr::summarise(DI_somaDesp_transpPrivado_mdBR = median(DI_somaDesp_transpPrivado))) |>
           #[IT0102] - cálculos prévios: mediana por UF
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::group_by(COD_UF) |>
                       dplyr::filter(DI_somaDesp_transpPublico > 0) |>
                       dplyr::summarise(DI_somaDesp_transpPublico_mdUF = median(DI_somaDesp_transpPublico)),
                     by = join_by(COD_UF)) |>
           #[IT0102] + cálculos prévios: mediana BR)
-          bind_cols( pof_data |>
+          dplyr::bind_cols( pof_data |>
                        dplyr::filter(DI_somaDesp_transpPublico > 0) |>
                        dplyr::summarise(DI_somaDesp_transpPublico_mdBR = median(DI_somaDesp_transpPublico))) |>
           #[IT0103]- cálculos prévios : mediana por estado da proporção por renda
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::filter(DI_somaDesp_transpPrivado > 0) |>
                       dplyr::mutate(prop = DI_somaDesp_transpPrivado/RENDA_TOTAL) |>
                       dplyr::group_by(COD_UF) |>
                       dplyr::summarise(DI_somaDesp_transpPrivado_byRenda_mdUF = median(prop, na.rm = T)),
                     by = join_by(COD_UF)) |>
           #[IT0104]- cálculos prévios : mediana por estado da proporção por renda
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::filter(DI_somaDesp_transpPublico > 0) |>
                       dplyr::mutate(prop = DI_somaDesp_transpPublico/RENDA_TOTAL) |>
                       dplyr::group_by(COD_UF) |>
@@ -736,13 +736,13 @@ transform_pof <- function(pof_data, pof_year){
 
         # Cálculos prévios
         pof_data <- pof_data %>%
-          left_join(
+          dplyr::left_join(
             pof_data |>
               dplyr::group_by(COD_UF) |>
               dplyr::summarise(DC_V9001_600201_V9005_mdUF = median(DC_V9001_600201_V9005)),
             by = join_by(COD_UF)) |>
           # [IR0101] + cálculos prévios: mediana BR)
-          bind_cols(
+          dplyr::bind_cols(
             pof_data |>
               dplyr::summarise(DC_V9001_600201_V9005_mdBR = median(DC_V9001_600201_V9005))
           ) |>
@@ -760,23 +760,23 @@ transform_pof <- function(pof_data, pof_year){
         ## Calculos finais
         pof_data <- pof_data %>%
           #IR0201, IR0202, IR0203, IR0204 - cálculos prévios: mediana por estado
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::group_by(COD_UF) |>
                       dplyr::summarise(DC_V9001_somaDesp_mdUF = median(DC_V9001_somaDesp)),
                     by = join_by(COD_UF)) |>
           # [IR0101] + cálculos prévios: mediana BR)
-          bind_cols(
+          dplyr::bind_cols(
             pof_data |>
               dplyr::summarise(DC_V9001_somaDesp_mdBR = median(DC_V9001_somaDesp))) |>
           #[IR0205]- cálculos prévios : mediana por estado da proporção por renda
-          left_join(pof_data |>
+          dplyr::left_join(pof_data |>
                       dplyr::mutate(prop = DC_V9001_somaDesp/RENDA_TOTAL) |>
                       dplyr::group_by(COD_UF) |>
                       dplyr::summarise(DC_V9001_somaDesp_byRenda_mdUF = median(prop, na.rm = T)),
                     by = join_by(COD_UF))
         ### Inventário --------------------------------------------------------------
       } else if (pof_tables_names == "Inventário") {
-        pof_data <- map(
+        pof_data <- purrr::map(
           pof_data %>%
             dplyr::select(
               COD_UF,
@@ -796,8 +796,8 @@ transform_pof <- function(pof_data, pof_year){
               '1401001', '1401201', '1401301', '1401401', '1401701', '1402101',
               '1402301', '1402401', '1401801'
             )) %>%
-            count(V9001) %>%
-            pull(V9001),
+            dplyr::count(V9001) %>%
+            dplyr::pull(V9001),
           ~pof_data %>%
             dplyr::filter(V9001 == .x) %>%
             dplyr::select(-SEQ_LINHA, -NUM_QUADRO) %>%
@@ -890,7 +890,7 @@ transform_pof <- function(pof_data, pof_year){
             V9001,
             PESO_FINAL
           ) %>%
-          distinct(COD_UF, COD_UPA, NUM_DOM, NUM_UC, V9001, PESO_FINAL) |>
+          dplyr::distinct(COD_UF, COD_UPA, NUM_DOM, NUM_UC, V9001, PESO_FINAL) |>
           dplyr::mutate(V9001 = paste0("OR_V9001_", V9001)) |>
           dplyr::mutate(n = 1) |>
           tidyr::pivot_wider(names_from = V9001,
@@ -964,9 +964,6 @@ transform_pof <- function(pof_data, pof_year){
             values_fill = 0,
             names_glue = "{V9001}_{.value}",
             names_vary = "slowest"
-          ) %>%
-          dplyr::mutate(
-
           )
         ###  Aluguel Estimado ----------------------------------------------------
       } else if (pof_tables_names == "Aluguel Estimado"){
@@ -1003,18 +1000,18 @@ transform_pof <- function(pof_data, pof_year){
       # Add table Despesa individual
       dplyr::left_join(data$`Despesa Individual`, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       dplyr::mutate(
-        across(contains("DI_V9001_"), ~replace_na(.x,0)),
-        across(contains("DI_soma"), ~replace_na(.x,0))
+        dplyr::across(contains("DI_V9001_"), ~tidyr::replace_na(.x,0)),
+        dplyr::across(contains("DI_soma"), ~tidyr::replace_na(.x,0))
       ) %>%
       # Add table Despesa Coletiva
       dplyr::left_join(data$`Despesa Coletiva`, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       dplyr::mutate(
-        across(contains("DC_V9001"), ~replace_na(.x,0))
+        dplyr::across(contains("DC_V9001"), ~tidyr::replace_na(.x,0))
       ) %>%
       # Add table Inventário
       dplyr::left_join(data$Inventário, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       dplyr::mutate(
-        across(contains("INV_V9001_"), ~replace_na(.x,0))
+        dplyr::across(contains("INV_V9001_"), ~tidyr::replace_na(.x,0))
       ) %>%
       # Add table Rendimentos do Trabalho
       dplyr::left_join(data$`Rendimento do Trabalho`, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)
@@ -1022,11 +1019,11 @@ transform_pof <- function(pof_data, pof_year){
       # Add table Outros Rendimentos
       dplyr::left_join(data$`Outros Rendimentos`, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       dplyr::mutate(
-        across(contains("OR_V9001"), ~replace_na(.x,0))
+        dplyr::across(contains("OR_V9001"), ~tidyr::replace_na(.x,0))
       ) %>%
       # Add Table Domicílio
       dplyr::left_join(data$Domicílio, by = join_by(UF, COD_UPA, NUM_DOM, PESO_FINAL)) %>%
-      dplyr::mutate(across(c(V0215, V02101, V02102, V02103), ~replace_na(.x, 0)))
+      dplyr::mutate(dplyr::across(c(V0215, V02101, V02102, V02103), ~tidyr::replace_na(.x, 0)))
 
   }
 
@@ -1041,17 +1038,17 @@ transform_pof <- function(pof_data, pof_year){
       dplyr::left_join(data$`Morador - Qualidade de Vida `, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       # Add table Despesa individual
       dplyr::left_join(data$`Despesa Individual`, by = join_by(UF == COD_UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
-      dplyr::mutate(across(contains("DI_V9001_"), ~replace_na(.x,0)),
-                    across(contains("DI_soma"), ~replace_na(.x,0)),
-                    RENDA_TOTAL = RENDA_TOTAL %>% replace_na(0)) %>%
+      dplyr::mutate(dplyr::across(contains("DI_V9001_"), ~tidyr::replace_na(.x,0)),
+                    dplyr::across(contains("DI_soma"), ~tidyr::replace_na(.x,0)),
+                    RENDA_TOTAL = RENDA_TOTAL %>% tidyr::replace_na(0)) %>%
       # Add table Despesa de 90 dias
       dplyr::left_join(data$`Despesas de 90 dias`,  join_by(UF == COD_UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL, RENDA_TOTAL)) %>%
-      dplyr::mutate(across(contains("V9005_"), ~replace_na(.x, 0)),
-                    across(contains("V8000_"), ~replace_na(.x, 0)),
-                    across(contains("DC_V9001"), ~replace_na(.x, 0))) %>%
+      dplyr::mutate(dplyr::across(contains("V9005_"), ~tidyr::replace_na(.x, 0)),
+                    dplyr::across(contains("V8000_"), ~tidyr::replace_na(.x, 0)),
+                    dplyr::across(contains("DC_V9001"), ~tidyr::replace_na(.x, 0))) %>%
       # Add table Inventário
       dplyr::left_join(data$Inventário, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
-      dplyr::mutate(across(contains("INV_V9001_"), ~replace_na(.x, 0))) %>%
+      dplyr::mutate(dplyr::across(contains("INV_V9001_"), ~tidyr::replace_na(.x, 0))) %>%
       # Add table Rendimentos do Trabalho
       dplyr::left_join(data$`Rendimentos do trabalho`, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, COD_INFORMANTE, PESO_FINAL)
       ) %>%
@@ -1060,10 +1057,10 @@ transform_pof <- function(pof_data, pof_year){
                        suffix = c("", "_morador")) %>%
       # Add table Outros Rendimentos
       dplyr::left_join(data$`Outros Rendimentos`, by = join_by(UF == COD_UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
-      dplyr::mutate(across(contains("OR_V9001"), ~replace_na(.x,0))) %>%
+      dplyr::mutate(dplyr::across(contains("OR_V9001"), ~tidyr::replace_na(.x,0))) %>%
       # Add table Outras Despesas
       dplyr::left_join(data$`Outras Despesas`, join_by(UF == COD_UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
-      dplyr::mutate(across(contains("DC_V9001"), ~replace_na(.x,0))) %>%
+      dplyr::mutate(dplyr::across(contains("DC_V9001"), ~tidyr::replace_na(.x,0))) %>%
       dplyr::select(-COD_UF) %>%
       dplyr::relocate(UF)
   }
