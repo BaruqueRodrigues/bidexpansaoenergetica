@@ -4,13 +4,10 @@
 \alias{transform_pof}
 \title{Transform POF}
 \usage{
-transform_pof(pof_data, pof_tables_names, pof_year)
+transform_pof(pof_data, pof_year)
 }
 \arguments{
 \item{pof_data}{A list vector of POF containing each table of POF.}
-
-\item{pof_tables_names}{A character vector containing name of each table of
-POF.}
 
 \item{pof_year}{A numeric vector that identifies the year of the POF.}
 }
@@ -26,9 +23,9 @@ de consumo.
 \examples{
 \dontrun{
 transform_pof(
-  pof_data = bidexpansaoenergetica::pof2009,
-  pof_tables_names = names(pof2009),
+  pof_data = pof2009,
   2009
 )
 }
+
 }
