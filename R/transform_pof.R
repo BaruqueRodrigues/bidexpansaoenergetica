@@ -809,7 +809,7 @@ transform_pof <- function(pof_data, pof_year){
             dplyr::select(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL, last_col())
 
         ) %>%
-          reduce(dplyr::left_join, by = c("UF", "COD_UPA", "NUM_DOM", "NUM_UC", "PESO_FINAL"))
+          purrr::reduce(dplyr::left_join, by = c("UF", "COD_UPA", "NUM_DOM", "NUM_UC", "PESO_FINAL"))
 
 
         ### Rendimentos do trabalho -------------------------------------------------
