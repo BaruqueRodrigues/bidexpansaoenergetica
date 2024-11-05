@@ -123,7 +123,7 @@ transform_pnad <- function(pnad_data){
   }
   if(unique(data$Ano) == 2022){
     data <- dplyr::select(data,
-                          !c(S01011B,S01011C, S01016A, S01016B))
+                          !c(S01011B,S01011C, S01016A))
   }
 
   ifelse((unique(data$Ano) %in% c(2019,2022)),
