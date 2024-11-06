@@ -35,7 +35,7 @@ creates_longer_dataset<- function(
   export_path = "ETL/output/",
   lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019,
                            pnad2022 = bidexpansaoenergetica::pnad2022,
-                           pof2019  = bidexpansaoenergetica::pof2009,
+                           pof2009  = bidexpansaoenergetica::pof2009,
                            pof2018  = bidexpansaoenergetica::pof2018)
 ){
   # Creates export path
