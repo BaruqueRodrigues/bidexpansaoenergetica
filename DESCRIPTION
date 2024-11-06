@@ -9,6 +9,8 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Additional_repositories: 
+    https://github.com/pola-rs/r-polars/releases/latest/download/polars.zip
 Imports: 
     archive,
     DBI,
@@ -27,5 +29,3 @@ Imports:
 Depends: 
     R (>= 2.10)
 RoxygenNote: 7.3.1
-Remotes:  
-    pola-rs/r-polars
