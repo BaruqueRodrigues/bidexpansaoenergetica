@@ -52,7 +52,7 @@ create_indicator_data <- function(path, database, year, indicator,
   ## per household: UF + com determinantes  (1/12) -----
   #parameters
   dataset <- df_metrics_byUC
-  determinant_columns <- dataset |> colnames() |> str_subset("^D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_household_UF_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -102,7 +102,7 @@ create_indicator_data <- function(path, database, year, indicator,
       grepl("^5", as.character(UF)) == TRUE ~ 5, #Centro Oeste
       TRUE ~ 100 #valor se erro
     ))
-  determinant_columns <- dataset |> colnames() |> str_subset("^D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_household_REG_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -152,7 +152,7 @@ create_indicator_data <- function(path, database, year, indicator,
   ## per household: BRA + com determinantes (5/12) -----
   #parameters
   dataset <- df_metrics_byUC |> mutate(UF = 0)
-  determinant_columns <- dataset |> colnames() |> str_subset("^D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_household_BRA_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -200,7 +200,7 @@ create_indicator_data <- function(path, database, year, indicator,
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
     mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
     select(-NUMERO_PESSOAS_DOMICILIO)
-  determinant_columns <- dataset |> colnames() |> str_subset("^D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_individual_UF_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -257,7 +257,7 @@ create_indicator_data <- function(path, database, year, indicator,
       grepl("^5", as.character(UF)) == TRUE ~ 5, #Centro Oeste
       TRUE ~ 100 #valor se erro
     ))
-  determinant_columns <- dataset |> colnames() |> str_subset("D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_individual_REG_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -314,7 +314,7 @@ create_indicator_data <- function(path, database, year, indicator,
     mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
     select(-NUMERO_PESSOAS_DOMICILIO) |>
     mutate(UF = 0)
-  determinant_columns <- dataset |> colnames() |> str_subset("D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_individual_BRA_filtered <- bidexpansaoenergetica::calculate_indicators(
