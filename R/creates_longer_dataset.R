@@ -50,7 +50,7 @@ creates_longer_dataset<- function(
   }
 
   # Check if lista_indicadores is a named list
-  if(!is.list(lista_indicadores) || length(names(lista_indicadores))>0) {
+  if(!is.list(lista_indicadores) || length(names(lista_indicadores)) == 0) {
     stop("lista_indicadores must be a named list")
   }
 
