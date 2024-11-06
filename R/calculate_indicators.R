@@ -109,13 +109,13 @@ calculate_indicators <- function(dataset, determinant_columns,
   # reframe replaced by:
 
   # Realiza as operações mais pesadas com {polars}
-  polars_df <- pl$LazyFrame(dataset)
+  polars_df <- polars::pl$LazyFrame(dataset)
   result_polars <- polars_df$group_by(peso_indic)$agg(
-    pl$col("PESO_FINAL")$sum()$alias("peso_indicador"),
-    pl$col("ref_determinante_niveis_n_ponderado")$first()$alias("ref_determinante_niveis_n_ponderado"),
-    pl$col("ref_total_n_ponderado")$first()
+    polars::pl$col("PESO_FINAL")$sum()$alias("peso_indicador"),
+    polars::pl$col("ref_determinante_niveis_n_ponderado")$first()$alias("ref_determinante_niveis_n_ponderado"),
+    polars::pl$col("ref_total_n_ponderado")$first()
   )$with_columns(
-    (pl$col("indicador_binario")*pl$col("peso_indicador"))$alias("indicador_n_ponderado_c")
+    (polars::pl$col("indicador_binario")*polars::pl$col("peso_indicador"))$alias("indicador_n_ponderado_c")
   )$select(var_select)
 
   # Recupera o dado como tibble
