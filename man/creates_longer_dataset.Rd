@@ -7,7 +7,10 @@
 creates_longer_dataset(
   indicadores = list.files("ETL/output/microdados_wider_rds", full.names = T, pattern =
     ".rds"),
-  export_path = "ETL/output/"
+  export_path = "ETL/output/",
+  lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019, pnad2022 =
+    bidexpansaoenergetica::pnad2022, pof2019 = bidexpansaoenergetica::pof2009, pof2018 =
+    bidexpansaoenergetica::pof2018)
 )
 }
 \arguments{
@@ -17,6 +20,8 @@ in the `ETL/output/microdados_wider_rds` directory.}
 
 \item{export_path}{A character string specifying the directory where the
 reshaped datasets should be saved. Default is `"ETL/output/"`.}
+
+\item{lista_indicadore}{a named list with indicators defined in bidexpansaoenergetica data export package, the usual is datasource+year}
 }
 \value{
 None. The function saves the reshaped datasets as `.csv` files
