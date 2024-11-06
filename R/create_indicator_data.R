@@ -35,7 +35,11 @@
 create_indicator_data <- function(path, database, year, indicator,
                                   export_path = 'ETL/output/longer_indicators/') {
 
-  !dir.exists(export_path) && dir.create(export_path, recursive = TRUE)
+  # create export path
+  if (!dir.exists(export_path)) {
+    dir.create(export_path, recursive = T)
+  }
+
   ## Reads the dataset
   df_metrics_byUC <- readRDS(path)
 
