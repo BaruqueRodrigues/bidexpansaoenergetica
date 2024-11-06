@@ -8,6 +8,7 @@
 #' in the `ETL/output/microdados_wider_rds` directory.
 #' @param export_path A character string specifying the directory where the
 #' reshaped datasets should be saved. Default is `"ETL/output/"`.
+#' @param lista_indicadore a named list with indicators defined in bidexpansaoenergetica data export package, the usual is datasource+year
 #'
 #' @return None. The function saves the reshaped datasets as `.csv` files
 #' in a `longer_csv` subdirectory within the specified `export_path`.
@@ -31,7 +32,11 @@
 creates_longer_dataset<- function(
   indicadores = list.files('ETL/output/microdados_wider_rds',
                              full.names = T, pattern = ".rds"),
-  export_path = "ETL/output/"
+  export_path = "ETL/output/",
+  lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019,
+                           pnad2022 = bidexpansaoenergetica::pnad2022,
+                           pof2019  = bidexpansaoenergetica::pof2009,
+                           pof2018  = bidexpansaoenergetica::pof2018)
 ){
   # Creates export path
 
@@ -43,6 +48,12 @@ creates_longer_dataset<- function(
   if (!dir.exists(glue::glue("{export_path}longer_csv/"))) {
     dir.create(glue::glue("{export_path}longer_csv/"), recursive = T)
   }
+
+  # Check if lista_indicadores is a named list
+  if(!is.list(lista_indicadores) || length(names(lista_indicadores))>0) {
+    stop("lista_indicadores must be a named list")
+  }
+
 
 
   allInd <- dplyr::tibble(path = indicadores) |>
@@ -63,10 +74,17 @@ creates_longer_dataset<- function(
 
   ## Lists the indicators to calculate
 
-  pnad2019 <- bidexpansaoenergetica::pnad2019
-  pnad2022 <- bidexpansaoenergetica::pnad2022
-  pof2009 <- bidexpansaoenergetica::pof2009
-  pof2018 <- bidexpansaoenergetica::pof2018
+  pnad2019 <- lista_indicadores$pnad2019
+  pnad2022 <- lista_indicadores$pnad2022
+  pof2009 <-  lista_indicadores$pof2009
+  pof2018 <-  lista_indicadores$pof2018
+
+  # check if all indicators isn't null
+  valor_teste <- setdiff(c("pnad2019", "pnad2022", "pof2009", "pof2018"), names(lista_indicadores))
+
+  # stop if there is any indicator that is not defined in lista_indicadores
+  if(valor_teste != character(0)){
+    stop("All indicators must be defined in lista_indicadores") }
 
 
 
