@@ -8,7 +8,7 @@
 #' in the `ETL/output/microdados_wider_rds` directory.
 #' @param export_path A character string specifying the directory where the
 #' reshaped datasets should be saved. Default is `"ETL/output/"`.
-#' @param lista_indicadore a named list with indicators defined in bidexpansaoenergetica data export package, the usual is datasource+year
+#' @param lista_indicadores a named list with indicators defined in bidexpansaoenergetica data export package, the usual is datasource+year
 #'
 #' @return None. The function saves the reshaped datasets as `.csv` files
 #' in a `longer_csv` subdirectory within the specified `export_path`.
@@ -83,9 +83,10 @@ creates_longer_dataset<- function(
   valor_teste <- setdiff(c("pnad2019", "pnad2022", "pof2009", "pof2018"), names(lista_indicadores))
 
   # stop if there is any indicator that is not defined in lista_indicadores
-  if(valor_teste != character(0)){
-    stop("All indicators must be defined in lista_indicadores") }
-
+  if(length(valor_teste) > 0) {
+    db <- stringr::str_flatten_comma(valor_teste)
+    warning(stringr::str_glue("Indicators for {db} weren't defined!"))
+  }
 
 
   ## Adds the indicators to the tibble
@@ -117,5 +118,23 @@ creates_longer_dataset<- function(
       file <- glue::glue("{export_path}longer_csv/df_{name}_metrics_nInd{indNum}_nDet{detNum}_longer_dashdados.csv")
       readr::write_csv2(dataset, file)
     })
-}
 
+  ## Concatenates all data
+  allData <- c("pnad2019", "pnad2022", "pof2009", "pof2018") |>
+    purrr::map(\(name) {
+      dataset <- list.files("ETL/output/longer_indicators/",
+                            pattern = name, full.names = T) |>
+        purrr::map(readRDS) |>
+        purrr::list_rbind()
+
+      detNum <- dplyr::n_distinct(dataset$var_filtro_nome)
+      indNum <- dplyr::n_distinct(dataset$indicador_nome)
+
+      file <- glue::glue("{export_path}df_{name}_metrics_nInd{indNum}_nDet{detNum}_longer.rds")
+      readRDS(file)
+    }) |>
+    purrr::list_rbind()
+  file <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds")
+  saveRDS(allData, file)
+
+}

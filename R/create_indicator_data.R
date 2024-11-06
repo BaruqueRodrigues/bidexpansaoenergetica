@@ -415,6 +415,6 @@ create_indicator_data <- function(path, database, year, indicator,
   file <- glue::glue(
     '{export_path}df_{database}{year}_metrics_{indicator}_longer.rds'
   )
-  saveRDS(file, df_longer_Agg)
+  saveRDS(df_longer_Agg, file)
 
 }
