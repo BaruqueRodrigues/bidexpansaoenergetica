@@ -92,7 +92,8 @@ creates_longer_dataset<- function(
   ## Adds the indicators to the tibble
   allInd <- allInd |>
     dplyr::rowwise() |>
-    dplyr::mutate(indicator = list(get(name))) |>
+    dplyr::mutate(indicator = list(get(name)),
+                 export_path = export_path) |>
     dplyr::ungroup() |>
     tidyr::unnest(cols = indicator)
 
