@@ -33,7 +33,7 @@
 #'
 #' @export
 create_indicator_data <- function(path, database, year, indicator,
-                                  export_path = 'ETL/output/longer_indicators/') {
+                                  export_path = 'ETL_pipeline/data/data-output/longer_indicators/') {
 
   # create export path
   if (!dir.exists(export_path)) {

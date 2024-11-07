@@ -30,9 +30,9 @@
 #'
 #' @export
 creates_longer_dataset<- function(
-  indicadores = list.files('ETL/output/microdados_wider_rds',
+  indicadores = list.files('ETL_pipeline/data/data-output/microdados-wider-rds',
                              full.names = T, pattern = ".rds"),
-  export_path = "ETL_pipeline/data/data-output/longer_indicators/",
+  export_path = "ETL_pipeline/data/data-output/",
   lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019,
                            pnad2022 = bidexpansaoenergetica::pnad2022,
                            pof2009  = bidexpansaoenergetica::pof2009,
@@ -105,8 +105,8 @@ creates_longer_dataset<- function(
   ## Merges all data for each dataset
   c("pnad2019", "pnad2022", "pof2009", "pof2018") |>
     purrr::walk(\(name) {
-      dataset <- list.files("ETL/output/longer_indicators/",
-                            pattern = name, full.names = T) |>
+      dataset <- glue::glue("{export_path}longer_indicators/") |>
+        list.files(pattern = name, full.names = T) |>
         purrr::map(readRDS) |>
         purrr::list_rbind()
 
@@ -123,8 +123,8 @@ creates_longer_dataset<- function(
   ## Concatenates all data
   allData <- c("pnad2019", "pnad2022", "pof2009", "pof2018") |>
     purrr::map(\(name) {
-      dataset <- list.files("ETL/output/longer_indicators/",
-                            pattern = name, full.names = T) |>
+      dataset <- glue::glue("{export_path}longer_indicators/") |>
+        list.files(pattern = name, full.names = T) |>
         purrr::map(readRDS) |>
         purrr::list_rbind()
 
