@@ -58,7 +58,7 @@ creates_longer_dataset<- function(
 
   allInd <- dplyr::tibble(path = indicadores) |>
     dplyr::mutate(
-      name = stringr::str_split_i(path, "/", 4),
+      name = stringr::str_split_i(path, "/", 5),
       name = stringr::str_split_i(name, "_", 2),
       database = stringr::str_extract(name, "[:alpha:]+"),
       year = stringr::str_extract(name, "[:digit:]+")
