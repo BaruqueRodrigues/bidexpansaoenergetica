@@ -32,7 +32,7 @@
 creates_longer_dataset<- function(
   indicadores = list.files('ETL/output/microdados_wider_rds',
                              full.names = T, pattern = ".rds"),
-  export_path = "ETL/output/",
+  export_path = "ETL_pipeline/data/data-output/longer_indicators/",
   lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019,
                            pnad2022 = bidexpansaoenergetica::pnad2022,
                            pof2009  = bidexpansaoenergetica::pof2009,
