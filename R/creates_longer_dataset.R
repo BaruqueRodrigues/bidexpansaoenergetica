@@ -54,8 +54,6 @@ creates_longer_dataset<- function(
     stop("lista_indicadores must be a named list")
   }
 
-
-
   allInd <- dplyr::tibble(path = indicadores) |>
     dplyr::mutate(
       name = stringr::str_split_i(path, "/", 5),
@@ -93,7 +91,7 @@ creates_longer_dataset<- function(
   allInd <- allInd |>
     dplyr::rowwise() |>
     dplyr::mutate(indicator = list(get(name)),
-                 export_path = export_path) |>
+                 export_path = glue::glue("{export_path}longer_indicators/")) |>
     dplyr::ungroup() |>
     tidyr::unnest(cols = indicator)
 
