@@ -20,10 +20,6 @@
 #'
 #' @export
 constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
-  # Função aqui
-}
-
-constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
 
   set_locale_based_on_os <- function() {
     sys_name <- Sys.info()["sysname"]
@@ -42,7 +38,7 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
   val_unicos <- variaveis_pof$subtabela %>% unique()
   caminho_dicionario = paste0(diretorio, 'dicionario/Dicionários de váriaveis.xls')
 
-  if (diretorio == 'data-raw/POF/2009/') {
+  if (stringr::str_detect(diretorio ,"/POF/2009/")) {
     tabela_leitura <- dplyr::tibble(
       diretorio = list.files(diretorio, pattern = "txt", full.names = TRUE),
       nome_aba = c("Aluguel Estimado", "Caderneta de Despesa", "Condições de vida ",
@@ -63,7 +59,7 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
                      ~ {
                        nome_aba <- .y %>% unique()
 
-                       if(diretorio == 'data-raw/POF/2009/'){
+                       if(stringr::str_detect(diretorio ,"/POF/2009/")){
                        # Verifica se a tabela é "Morador - Qualidade de Vida " e ajusta o skip
                        skip_value <- ifelse(nome_aba == "Morador - Qualidade de Vida ", 2, 3)
 
@@ -84,7 +80,7 @@ constroi_pof_tabelas <- function(diretorio = 'data-raw/POF/2018/') {
                                                   )
                        )
                        }
-                       if(diretorio == 'data-raw/POF/2018/'){
+                       if(stringr::str_detect(diretorio ,"/POF/2018/")){
                          # Verifica se a tabela é "Morador - Qualidade de Vida " e ajusta o skip
                          skip_value <- ifelse(nome_aba %in% c("Morador - Qualidade de Vida", "Condições de Vida"), 2, 3)
 
