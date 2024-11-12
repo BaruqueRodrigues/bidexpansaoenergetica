@@ -9,7 +9,7 @@ create_indicator_data(
   database,
   year,
   indicator,
-  export_path = "ETL/output/longer_indicators/"
+  export_path = "ETL_pipeline/data/data-output/longer_indicators/"
 )
 }
 \arguments{
