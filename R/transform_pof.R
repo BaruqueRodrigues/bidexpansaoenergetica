@@ -269,7 +269,11 @@ transform_pof <- function(pof_data, pof_year){
               700801,  #vulnerability: EAIR1101
               700901,
               701001, 701002, #vulnerability: EAIR0601
-              701101
+              701101,
+              #DC0501
+              1000101, 1000201, 1000301, 1000401, 1000501, 1000601, 1000602, 1000701,
+              1000702, 1000703, 1000801, 1000901, 1001001, 1001101, 1001201, 1001301,
+              1001401, 1001501, 1001601, 1099901
             )
           ) %>%
           dplyr::select(UF, COD_UPA, NUM_DOM, NUM_UC, V9001, PESO_FINAL,
@@ -930,41 +934,28 @@ transform_pof <- function(pof_data, pof_year){
         ### Despesas de 12 meses ----------------------------------------------------
       } else if (pof_tables_names == "Despesas de 12 meses"){
         pof_data <- pof_data %>%
-          dplyr::select(
-            COD_UF,
-            COD_UPA,
-            NUM_DOM,
-            NUM_UC,
-            NUM_QUADRO,
-            SEQ_LINHA,
-            V9001,
-            V9002,
-            V9010,
-            V9011,
-            FATOR_ANUALIZACAO,
-            V8000,
-            V8000_DEFLA,
-            RENDA_TOTAL,
-            PESO_FINAL
-          ) %>%
-          dplyr::filter(V9001 %in% c(1000101, 1000201, 1000301, 1000401, 1000501, 1000502,
-                                     1000601, 1000603, 1000701, 1000702, 1000801, 1000901, 1001001,
-                                     1001002, 1001003, 1001101, 1001102, 1001201, 1001301, 1001401)
-          ) %>%
-          dplyr::group_by(COD_UF, COD_UPA, NUM_DOM, NUM_UC, V9001, PESO_FINAL) %>%
+          dplyr::filter(NUM_QUADRO == 10) %>%
+          dplyr::select(COD_UF, COD_UPA, NUM_DOM, NUM_UC, V9001, NUM_QUADRO, NUM_SEQ, PESO_FINAL, V8000_DEFLA) |>
+          #garantee a unique value per UC – there are variations due to COD_INFORMANTE, NUM_QUADRO, NUM_SEQ
+          dplyr::group_by(COD_UF, COD_UPA, NUM_DOM, NUM_UC, V9001, NUM_QUADRO, NUM_SEQ, PESO_FINAL) |>
+          #(!) to-do: It has not yet been validated whether this is the correct calculation
           dplyr::summarise(
-            V8000_DEFLA = mean(V8000_DEFLA, na.rm = TRUE)
-          ) %>%
-          dplyr::ungroup() %>%
-          dplyr::mutate(V9001 = paste0("DC_V9001_", V9001)) %>%
-          dplyr::mutate(INDEX = 1) %>%
-          tidyr::pivot_wider(
-            names_from = V9001,
-            values_from = c(INDEX, V8000_DEFLA),
-            values_fill = 0,
-            names_glue = "{V9001}_{.value}",
-            names_vary = "slowest"
-          )
+            V8000_DEFLA = sum(V8000_DEFLA, na.rm = T)
+          ) |>
+          dplyr::group_by(COD_UF, COD_UPA, NUM_DOM, NUM_UC, V9001, PESO_FINAL) |>
+          #(!) to-do: It has not yet been validated whether this is the correct calculation
+          dplyr::summarise(
+            V8000_DEFLA = mean(V8000_DEFLA, na.rm = T)
+          ) |>
+          dplyr::ungroup() |>
+          #to identify the origen of the V9001 information: D12 = DESPESA DE 12 MESES
+          dplyr::mutate(V9001 = paste0("DC_V9001_", V9001)) |>
+          dplyr::mutate(INDEX = 1) |>
+          tidyr::pivot_wider(names_from = V9001,
+                             values_from = c(INDEX, V8000_DEFLA),
+                             values_fill = 0,
+                             names_glue = "{V9001}_{.value}",
+                             names_vary = "slowest")
         ###  Aluguel Estimado ----------------------------------------------------
       } else if (pof_tables_names == "Aluguel Estimado"){
         pof_data <- pof_data %>%
@@ -1046,6 +1037,14 @@ transform_pof <- function(pof_data, pof_year){
       dplyr::mutate(dplyr::across(contains("V9005_"), ~tidyr::replace_na(.x, 0)),
                     dplyr::across(contains("V8000_"), ~tidyr::replace_na(.x, 0)),
                     dplyr::across(contains("DC_V9001"), ~tidyr::replace_na(.x, 0))) %>%
+      # Add table Despesa de 12 meses
+      dplyr::left_join(data$`Despesas de 12 meses`,
+        dplyr::join_by(UF == COD_UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)
+      ) %>%
+      dplyr::mutate(
+        dplyr::across(contains("INDEX"), ~tidyr::replace_na(.x, 0)),
+        dplyr::across(contains("DEFLA"), ~tidyr::replace_na(.x, 0))
+      ) %>%
       # Add table Inventário
       dplyr::left_join(data$Inventário, by = join_by(UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       dplyr::mutate(dplyr::across(contains("INV_V9001_"), ~tidyr::replace_na(.x, 0))) %>%
