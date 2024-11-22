@@ -26,6 +26,9 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
   df_pof_2018 <- list.files(dir, pattern = '.rds', full.names = T) |>
     stringr::str_subset('df_pof2018') |>
     readRDS() |>
+    dplyr::mutate(
+      dplyr::across(dplyr::starts_with("EA"), ~.x * PESO_FINAL/sum(PESO_FINAL))
+    ) |>
     dplyr::rename(geo_value = UF) |>
     tidyr::unite(id_unique, c("COD_UPA", "NUM_DOM", "NUM_UC")) |>
     dplyr::mutate(time = "2018") |>
@@ -46,6 +49,9 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
   df_pof_2009 <- list.files(dir, pattern = '.rds', full.names = T) |>
     stringr::str_subset('df_pof2009') |>
     readRDS() |>
+    dplyr::mutate(
+      dplyr::across(dplyr::starts_with("EA"), ~.x * PESO_FINAL/sum(PESO_FINAL))
+    ) |>
     dplyr::rename(geo_value = UF) |>
     tidyr::unite(id_unique, c("COD_UPA", "NUM_DOM", "NUM_UC")) |>
     dplyr::mutate(time = "2009") |>
@@ -65,6 +71,9 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
   df_pnad_2022 <- list.files(dir, pattern = '.rds', full.names = T) |>
     stringr::str_subset('df_pnad2022') |>
     readRDS() |>
+    dplyr::mutate(
+      dplyr::across(dplyr::starts_with("EA"), ~.x * PESO_FINAL/sum(PESO_FINAL))
+    ) |>
     dplyr::rename(geo_value = UF) |>
     tidyr::unite(id_unique, c("COD_UPA", "NUM_DOM", "Trimestre")) |>
     dplyr::rename(time = Ano) |>
@@ -82,6 +91,9 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
   df_pnad_2019 <- list.files(dir, pattern = '.rds', full.names = T) |>
     stringr::str_subset('df_pnad2019') |>
     readRDS() |>
+    dplyr::mutate(
+      dplyr::across(dplyr::starts_with("EA"), ~.x * PESO_FINAL/sum(PESO_FINAL))
+    ) |>
     dplyr::rename(geo_value = UF) |>
     tidyr::unite(id_unique, c("COD_UPA", "NUM_DOM", "Trimestre")) |>
     dplyr::rename(time = Ano) |>
@@ -168,7 +180,7 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
 
   df_wider_stats_RG <- df_wider |>
     dplyr::mutate(geo = "region") |>
-    dplyr::mutate(geo_value = case_when(
+    dplyr::mutate(geo_value = dplyr::case_when(
       grepl("^1", as.character(geo_value)) == TRUE ~ 1, #Norte
       grepl("^2", as.character(geo_value)) == TRUE ~ 2, #Nordeste
       grepl("^3", as.character(geo_value)) == TRUE ~ 3, #Sudeste
@@ -205,7 +217,7 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
     df_wider_stats_BR |>
     dplyr::bind_rows(df_wider_stats_UF) |>
     dplyr::bind_rows(df_wider_stats_RG) |>
-    dplyr::mutate(stats_value = round(stats_value, 2)) |>
+    dplyr::mutate(stats_value = round(stats_value, 5)) |>
     dplyr::relocate(stats_name, .before = stats_value )
 
   df_wider_stats |> dplyr::glimpse()
