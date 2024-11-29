@@ -84,7 +84,48 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
   }
 
 
+  if(database_name == "pof")
+  {
+    df$database <- "pof"
+    df$time_period <- "year"
 
+    if(database_year == 2009)
+    {
+      data$time <- "2009"
+    }else if(databse_year == 2018)
+    {
+      data$time <- "2018"
+    }else{
+      # warning("This year does not exist!")
+      data$time <- NaN
+    }
+  }
+
+  if(database_name == "pnad")
+  {
+    df$database <- "pnad"
+    df$time_period <- "year"
+
+    if(database_year == 2016)
+    {
+      data$time <- "2016"
+    }else if(database_year == 2017)
+    {
+      data$time <- "2017"
+    }else if(database_year == 2018)
+    {
+      data$time <- "2018"
+    }else if(database_year == 2019)
+    {
+      data$time <- "2019"
+    }else if(database_year == 2022)
+    {
+      data$time <- "2022"
+    }else{
+      # warning("This year does not exist!")
+      data$time <- NaN
+    }
+  }
 
   temp <- data
 
