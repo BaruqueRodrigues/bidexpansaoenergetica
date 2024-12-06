@@ -72,5 +72,7 @@ constroi_pnad_tabelas <- function(diretorio, ano){
     visita_5 = pnadc_entrevista_5
   )
 
+  #resultado_tbl <- as_tibble(resultado)
+
   return(resultado)
 }

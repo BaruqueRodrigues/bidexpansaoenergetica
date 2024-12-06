@@ -71,10 +71,10 @@ baixa_visita_1_pnadc <- function(
   # Baixando e salvando o arquivo zip
   download.file(dictionary_url,
                 paste0(destination_dir,
-                       dictionary_path), mode = 'wb', timeout = 300)
+                       dictionary_path), mode = 'wb', timeout = 600)# default 300
   download.file(input_url,
                 paste0(destination_dir,
-                       input_path), mode = 'wb', timeout = 300)
+                       input_path), mode = 'wb', timeout = 600)# default 300
 
   ## Baixa Microdados --------------------------------
 
@@ -92,7 +92,7 @@ baixa_visita_1_pnadc <- function(
   download.file(url = url_microdados,
                 destfile = paste0(destination_dir,
                                   microdados_path),
-                mode = "wb", timeout = 300)
+                mode = "wb", timeout = 600)# default 300
 
   # Descompactando o arquivo
 

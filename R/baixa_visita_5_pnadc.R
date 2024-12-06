@@ -59,10 +59,10 @@ baixa_visita_5_pnadc <- function(ano = 2016,
   # Baixando e salvando o arquivo zip
   download.file(dictionary_url,
                 paste0(destination_dir,
-                       dictionary_path), mode = 'wb', timeout = 300)
+                       dictionary_path), mode = 'wb', timeout = 600)# Before was 300
   download.file(input_url,
                 paste0(destination_dir,
-                       input_path), mode = 'wb', timeout = 300)
+                       input_path), mode = 'wb', timeout = 600)# Before was 300
 
   ## Baixa Microdados --------------------------------
 
@@ -76,7 +76,7 @@ baixa_visita_5_pnadc <- function(ano = 2016,
                 paste0(destination_dir,
                        microdados_path),
                 mode = 'wb',
-                timeout = 300)
+                timeout = 600)# Before was
 
   # Descompactando o arquivo
 

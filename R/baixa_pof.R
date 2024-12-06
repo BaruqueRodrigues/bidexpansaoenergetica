@@ -60,7 +60,7 @@ baixa_pof <- function(destination_dir = 'data-raw/POF/'){
   #dir.create('data-raw/POF/2018/', recursive = TRUE, showWarnings = FALSE)
 
   # Baixando e salvando o arquivo zip
-  download.file(dictionary_url, dictionary_path, mode = 'wb', timeout = 300)
+  download.file(dictionary_url, dictionary_path, mode = 'wb', timeout = 600)# Default was 300
 
   # Extraindo os arquivos do zip diretamente para o diretório desejado
   archive::archive_extract(dictionary_path,
@@ -83,7 +83,7 @@ baixa_pof <- function(destination_dir = 'data-raw/POF/'){
 
 
   # Baixando o arquivo ZIP para o local especificado
-  download.file(url_microdados_pof, caminho_zip, mode = 'wb', timeout = 300)
+  download.file(url_microdados_pof, caminho_zip, mode = 'wb', timeout = 600)# Default was 300
 
   # Extraindo os arquivos do ZIP diretamente para o diretório desejado
   unzipped_files <- unzip(caminho_zip,
@@ -109,7 +109,7 @@ baixa_pof <- function(destination_dir = 'data-raw/POF/'){
 
 
   # Baixando e salvando o arquivo zip
-  download.file(dictionary_url, dictionary_path, mode = 'wb', timeout = 300)
+  download.file(dictionary_url, dictionary_path, mode = 'wb', timeout = 600)# Default was 300
 
   # Extraindo os arquivos do zip diretamente para o diretório desejado
   archive::archive_extract(dictionary_path,
