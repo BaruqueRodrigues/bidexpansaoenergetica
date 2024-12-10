@@ -1,0 +1,320 @@
+---
+title: "Relatório de verificação"
+output: html_document
+params:
+  export_path: 'ETL_pipeline/data/data-output/'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+df_longer <- readRDS(
+  glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds")
+) |> 
+  dplyr::mutate(database = glue::glue("{database}{time}"))
+
+df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
+  purrr::map(\(x) {
+    database <- stringr::str_split_i(x, "_", 2)
+    glue::glue("{export_path}{x}") |> 
+      readRDS() |> 
+      dplyr::mutate(dplyr::across(
+        .cols = c(UF, COD_UPA, NUM_DOM),
+        .fns = as.character
+      )) |> 
+      dplyr::mutate(database = database)
+  })
+
+```
+
+```{css}
+.main-container {
+overflow-x: auto;
+}
+
+h4 {
+margin-top: 30px;
+}
+```
+
+## {.tabset}
+### Volumetria
+#### Base longer
+
+```{r}
+
+create_stats_longer <- function(var) {
+  col <- df_longer |> 
+    dplyr::pull(!!var)
+  
+  htmltools::div(
+    htmltools::strong(var,": "),
+    dplyr::n_distinct(col),
+    "[", glue::glue_collapse(sort(unique(col)), sep = ", "), "]"
+  ) |> as.character()
+}
+
+c("database", "aggregation", "geo", "geo_value") |> 
+  purrr::map_chr(create_stats_longer) |> 
+  htmltools::HTML()
+
+```
+
+```{r}
+htmltools::div(
+  htmltools::strong("Determinantes únicos: "),
+  df_longer |> 
+    dplyr::filter(var_filtro_nome != "all_values") |> 
+    dplyr::pull(var_filtro_nome) |> 
+    dplyr::n_distinct()
+)
+```
+
+```{r}
+htmltools::div(
+  htmltools::strong("Indicadores únicos: "),
+  dplyr::n_distinct(df_longer$indicador_nome)
+)
+```
+
+#### Bases wider
+
+```{r}
+
+create_stats_wider <- function(data, longer) {
+  det_longer <- longer |> 
+    dplyr::filter(var_filtro_nome != "all_values") |> 
+    dplyr::filter(database == data$database[1]) |> 
+    dplyr::pull(var_filtro_nome) |> 
+    unique()
+  det_wider <- colnames(data) |> 
+    stringr::str_subset('^D[:alpha:][:digit:]{4}')
+  det_diff <- setdiff(det_wider, det_longer)
+  det_count <- length(det_diff)
+  det_diff <- glue::glue_collapse(sort(det_diff), sep = ", ")
+  
+  ind_longer <- longer |> 
+    dplyr::filter(database == data$database[1]) |> 
+    dplyr::pull(indicador_nome) |> 
+    unique()
+  ind_wider <- colnames(data) |> 
+    stringr::str_subset('^I[:alpha:][:digit:]{4}')
+  ind_diff <- setdiff(ind_wider, ind_longer)
+  ind_count <- length(ind_diff)
+  ind_diff <- glue::glue_collapse(sort(ind_diff), sep = ", ")
+  
+  htmltools::div(
+    htmltools::h5(unique(data$database)),
+    
+    htmltools::strong("Tamanho da amostra: "),
+    nrow(data), htmltools::br(),
+    
+    htmltools::strong("Soma da população: "),
+    data$PESO_FINAL |> 
+      sum() |> 
+      round(), htmltools::br(),
+    
+    htmltools::strong("Determinantes únicos: "),
+    colnames(data) |> 
+      stringr::str_detect('^D[:alpha:][:digit:]{4}') |> 
+      sum(), htmltools::br(),
+    
+    htmltools::strong("Indicadores únicos: "),
+    colnames(data) |> 
+      stringr::str_detect('^I[:alpha:][:digit:]{4}') |> 
+      sum(), htmltools::br(),
+    
+    htmltools::strong("Estatísticas adicionais únicas: "),
+    colnames(data) |> 
+      stringr::str_detect('^EA[:alpha:]{2}[:digit:]{4}') |> 
+      sum(), htmltools::br(),
+    
+    htmltools::strong("Det. do wider ausentes no longer: "),
+    stringr::str_glue("{det_count} [{det_diff}]"), htmltools::br(),
+    
+    htmltools::strong("Ind. do wider ausentes no longer: "),
+    stringr::str_glue("{ind_count} [{ind_diff}]")
+  ) |> as.character()
+}
+
+df_wider |> 
+  purrr::map_chr(\(x) create_stats_wider(x, df_longer)) |> 
+  htmltools::HTML()
+
+```
+
+#### Lista de determinantes na base longer
+
+```{r}
+
+df_longer |> 
+  dplyr::distinct(database, indicador_nome) |> 
+  dplyr::mutate(presente = "o") |> 
+  tidyr::complete(database, indicador_nome,
+                  fill = list(presente = "x")) |> 
+  tidyr::pivot_wider(names_from = database,
+                     values_from = presente) |> 
+  dplyr::rename(Indicador = indicador_nome) |> 
+  DT::datatable(rownames = F, escape = F)
+
+```
+
+
+#### Lista de determinantes na base longer
+
+```{r}
+
+df_longer |> 
+  dplyr::filter(var_filtro_nome != 'all_values') |> 
+  dplyr::distinct(database, var_filtro_nome) |> 
+  dplyr::mutate(presente = "o") |> 
+  tidyr::complete(database, var_filtro_nome,
+                  fill = list(presente = "x")) |> 
+  tidyr::pivot_wider(names_from = database,
+                     values_from = presente) |> 
+  dplyr::rename(Determinante = var_filtro_nome) |> 
+  DT::datatable(rownames = F, escape = F)
+
+```
+
+
+#### Lista de níveis x determinantes na base longer
+
+```{r}
+
+df_longer |> 
+  dplyr::filter(var_filtro_nome != 'all_values') |> 
+  dplyr::mutate(nivel = stringr::str_glue('{var_filtro_nome}-{var_filtro_niveis}')) |> 
+  dplyr::distinct(database, nivel) |> 
+  dplyr::mutate(presente = "o") |> 
+  tidyr::complete(database, nivel,
+                  fill = list(presente = "x")) |> 
+  tidyr::pivot_wider(names_from = database,
+                     values_from = presente) |> 
+  dplyr::rename(`Nível` = nivel) |> 
+  DT::datatable(rownames = F, escape = F)
+
+```
+
+### Resultados
+#### Filtros
+
+```{r}
+htmltools::tags$label("Agregação")
+htmltools::tags$select(
+  id = "input-agr",
+  htmltools::tags$option("household"),
+  htmltools::tags$option("individual")
+)
+htmltools::br()
+htmltools::tags$label("Território")
+htmltools::tags$select(
+  id = "input-geo",
+  htmltools::tags$option("country"),
+  htmltools::tags$option("region"),
+  htmltools::tags$option("uf")
+)
+
+htmltools::tags$script('$(document).ready(function() {
+$( "#input-agr, #input-geo" ).on( "change", function() {
+
+let optAgr = "." + $("#input-agr").val();
+let optGeo = "." + $("#input-geo").val();
+let opt = ".table-holder" + optAgr + optGeo
+$( ".table-holder" ).hide();
+$( opt ).show();
+
+} );
+$( "#input-agr, #input-geo" ).trigger("change");
+
+} )')
+
+```
+
+```{r}
+
+dfWork <- df_longer |>
+  dplyr::rename(
+    Aggr = aggregation,
+    Geo = geo,
+    GeoN = geo_value,
+    Det = var_filtro_nome,
+    DetN = var_filtro_niveis,
+    Ind = indicador_nome
+  )
+
+tabList <- expand.grid(
+  agr = c("household", "individual"),
+  geo = c("country", "region", "uf")
+)
+
+```
+
+#### Valores dos indicadores por determinante
+
+```{r}
+
+table <- purrr::map2_chr(
+  tabList$agr, tabList$geo,
+  \(agr, geo) {
+    htmltools::div(
+      class = glue::glue('table-holder {agr} {geo}'),
+      dfWork |>
+        dplyr::filter(Aggr == agr, Geo == geo) |>
+        dplyr::summarise(
+          n = round(sum(indicador_n_ponderado)),
+          p = round(100*sum(indicador_p_ponderado), 2),
+          .by = c(database, Aggr, Geo, GeoN, Det, DetN, Ind)
+        ) |>
+        dplyr::mutate(value = glue::glue("<strong>{p}%</strong><br>{n}")) |>
+        dplyr::select(-n, -p) |>
+        tidyr::pivot_wider(names_from = database, values_from = value) |>
+        dplyr::arrange(GeoN, Ind, Det, DetN) |>
+        DT::datatable(rownames = F, escape = F)
+    ) |> as.character()
+  }
+)
+htmltools::HTML(table)
+
+```
+
+#### Distribuição dos níveis dos determinantes
+
+```{r}
+
+table <- purrr::map2_chr(
+  tabList$agr, tabList$geo,
+  \(agr, geo) {
+    htmltools::div(
+      class = glue::glue('table-holder {agr} {geo}'),
+      dfWork |>
+        dplyr::filter(Aggr == agr, Geo == geo) |>
+        dplyr::summarise(
+          total = round(sum(indicador_n_ponderado)),
+          .by = c(Aggr, Geo, Det, DetN, database)
+        ) |>
+        dplyr::mutate(
+          pct = round(100*total/sum(total)),
+          .by = c(Aggr, Geo, Det, database)
+        ) |>
+        dplyr::mutate(
+          value = glue::glue("<strong>{pct}%</strong><br>{total}")
+        ) |>
+        dplyr::select(-pct, -total) |>
+        tidyr::pivot_wider(names_from = database, values_from = value) |>
+        dplyr::arrange(Det, DetN) |>
+        DT::datatable(rownames = F, escape = F)
+    ) |> as.character()
+  })
+htmltools::HTML(table)
+
+htmltools::div(
+  class = glue::glue('table-holder'),
+  dfWork |>
+    dplyr::slice(0) |>
+    DT::datatable(rownames = F, escape = F)
+)
+
+```
+
+## {-}

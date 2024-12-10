@@ -15,6 +15,9 @@ Imports:
     archive,
     DBI,
     dplyr,
+    DT,
+    glue,
+    htmltools,
     janitor,
     magrittr,
     odbc,
@@ -23,6 +26,7 @@ Imports:
     purrr,
     readr,
     readxl,
+    scales,
     stringr,
     tidyr,
     utils

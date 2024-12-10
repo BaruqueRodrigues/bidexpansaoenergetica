@@ -8,9 +8,10 @@ creates_longer_dataset(
   indicadores = list.files("ETL_pipeline/data/data-output/microdados-wider-rds",
     full.names = T, pattern = ".rds"),
   export_path = "ETL_pipeline/data/data-output/",
-  lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019, pnad2022 =
-    bidexpansaoenergetica::pnad2022, pof2009 = bidexpansaoenergetica::pof2009, pof2018 =
-    bidexpansaoenergetica::pof2018)
+  lista_indicadores = list(pnad2016 = bidexpansaoenergetica::pnad2016, pnad2017 =
+    bidexpansaoenergetica::pnad2017, pnad2018 = bidexpansaoenergetica::pnad2018, pnad2019
+    = bidexpansaoenergetica::pnad2019, pnad2022 = bidexpansaoenergetica::pnad2022,
+    pof2009 = bidexpansaoenergetica::pof2009, pof2018 = bidexpansaoenergetica::pof2018)
 )
 }
 \arguments{
