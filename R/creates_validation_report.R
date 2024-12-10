@@ -4,8 +4,8 @@
 #' of the wider and longer datasets.
 #'
 #' @param export_path A character string specifying the directory in
-#' which the longer and wider datasets are stored.
-#' Default is `"ETL_pipeline/data/data-output/"`.
+#' which the longer dataset and the directory containing the wider
+#' datasets are stored. Default is `"ETL_pipeline/data/data-output/"`.
 #'
 #' @return None. The function saves the report as a HTML file
 #' in the specified `export_path`.
@@ -34,18 +34,11 @@ creates_validation_report <- function(
     readRDS() |>
     dplyr::mutate(database = glue::glue("{database}{time}"))
 
-  print('!!!!!!!!!!!!!!!!!')
-  print(list.files(export_path))
-  print('!!!!!!!!!!!!!!!!!')
-  print(list.files(export_path, pattern = "^df_(.+)_longer.rds$"))
-  print('!!!!!!!!!!!!!!!!!')
   df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
     purrr::map(\(x) {
       database <- stringr::str_split_i(x, "_", 2)
-      a=glue::glue("{export_path}{x}") |>
-        readRDS()
-      print(colnames(a) |> sort())
-      a |>
+      glue::glue("{export_path}microdados-wider-rds/{x}") |>
+        readRDS()|>
         dplyr::mutate(dplyr::across(
           .cols = c(UF, COD_UPA, NUM_DOM),
           .fns = as.character
