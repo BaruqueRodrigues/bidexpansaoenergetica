@@ -30,9 +30,28 @@ creates_validation_report <- function(
     dir.create(export_path, recursive = T)
   }
 
+  df_longer <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds") |>
+    readRDS() |>
+    dplyr::mutate(database = glue::glue("{database}{time}"))
+
+  df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
+    purrr::map(\(x) {
+      database <- stringr::str_split_i(x, "_", 2)
+      glue::glue("{export_path}{x}") |>
+        readRDS() |>
+        dplyr::mutate(dplyr::across(
+          .cols = c(UF, COD_UPA, NUM_DOM),
+          .fns = as.character
+        )) |>
+        dplyr::mutate(database = database)
+    })
+
   rmarkdown::render(
     input = system.file("validation_report.Rmd", package = "bidexpansaoenergetica"),
     output_dir = export_path,
-    params = list(export_path = export_path)
+    params = list(
+      df_longer = df_longer,
+      df_wider = df_wider
+    )
   )
 }
