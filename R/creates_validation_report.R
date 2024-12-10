@@ -34,7 +34,8 @@ creates_validation_report <- function(
     readRDS() |>
     dplyr::mutate(database = glue::glue("{database}{time}"))
 
-  df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
+  df_wider <- glue::glue("{export_path}microdados-wider-rds") |>
+    list.files() |>
     purrr::map(\(x) {
       database <- stringr::str_split_i(x, "_", 2)
       glue::glue("{export_path}microdados-wider-rds/{x}") |>
