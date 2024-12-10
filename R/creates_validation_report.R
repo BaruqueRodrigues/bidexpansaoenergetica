@@ -33,7 +33,7 @@ creates_validation_report <- function(
   df_longer <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds") |>
     readRDS() |>
     dplyr::mutate(database = glue::glue("{database}{time}"))
-
+  print(df_longer)
   df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
     purrr::map(\(x) {
       database <- stringr::str_split_i(x, "_", 2)
