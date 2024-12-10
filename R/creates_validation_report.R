@@ -28,7 +28,7 @@ creates_validation_report <- function(
 ){
   rmarkdown::render(
     input = system.file("validation_report.Rmd", package = "bidexpansaoenergetica"),
-    output_file = here::here(glue::glue("{export_path}validation_report.html")),
+    output_dir = export_path,
     params = list(export_path = export_path)
   )
 }
