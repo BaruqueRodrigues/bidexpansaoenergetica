@@ -26,6 +26,10 @@
 creates_validation_report <- function(
     export_path = "ETL_pipeline/data/data-output/"
 ){
+  if (!dir.exists(export_path)) {
+    dir.create(export_path, recursive = T)
+  }
+
   rmarkdown::render(
     input = system.file("validation_report.Rmd", package = "bidexpansaoenergetica"),
     output_dir = export_path,
