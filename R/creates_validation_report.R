@@ -37,8 +37,10 @@ creates_validation_report <- function(
   df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
     purrr::map(\(x) {
       database <- stringr::str_split_i(x, "_", 2)
-      glue::glue("{export_path}{x}") |>
-        readRDS() |>
+      a=glue::glue("{export_path}{x}") |>
+        readRDS()
+      print(colnames(a) |> sort())
+      a |>
         dplyr::mutate(dplyr::across(
           .cols = c(UF, COD_UPA, NUM_DOM),
           .fns = as.character
