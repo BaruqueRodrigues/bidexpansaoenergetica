@@ -86,8 +86,8 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
 
   if(database_name == "pof")
   {
-    df$database <- "pof"
-    df$time_period <- "year"
+    data$database <- "pof"
+    data$time_period <- "year"
 
     if(database_year == 2009)
     {
@@ -103,8 +103,8 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
 
   if(database_name == "pnad")
   {
-    df$database <- "pnad"
-    df$time_period <- "year"
+    data$database <- "pnad"
+    data$time_period <- "year"
 
     if(database_year == 2016)
     {

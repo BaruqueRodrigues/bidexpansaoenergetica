@@ -33,7 +33,10 @@ creates_longer_dataset<- function(
   indicadores = list.files('ETL_pipeline/data/data-output/microdados-wider-rds',
                              full.names = T, pattern = ".rds"),
   export_path = "ETL_pipeline/data/data-output/",
-  lista_indicadores = list(pnad2019 = bidexpansaoenergetica::pnad2019,
+  lista_indicadores = list(pnad2016 = bidexpansaoenergetica::pnad2016,
+                           pnad2017 = bidexpansaoenergetica::pnad2017,
+                           pnad2018 = bidexpansaoenergetica::pnad2018,
+                           pnad2019 = bidexpansaoenergetica::pnad2019,
                            pnad2022 = bidexpansaoenergetica::pnad2022,
                            pof2009  = bidexpansaoenergetica::pof2009,
                            pof2018  = bidexpansaoenergetica::pof2018)
@@ -72,13 +75,16 @@ creates_longer_dataset<- function(
 
   ## Lists the indicators to calculate
 
+  pnad2016 <- lista_indicadores$pnad2016
+  pnad2017 <- lista_indicadores$pnad2017
+  pnad2018 <- lista_indicadores$pnad2018
   pnad2019 <- lista_indicadores$pnad2019
   pnad2022 <- lista_indicadores$pnad2022
   pof2009 <-  lista_indicadores$pof2009
   pof2018 <-  lista_indicadores$pof2018
 
   # check if all indicators isn't null
-  valor_teste <- setdiff(c("pnad2019", "pnad2022", "pof2009", "pof2018"), names(lista_indicadores))
+  valor_teste <- setdiff(c("pnad2016", "pnad2017", "pnad2018", "pnad2019", "pnad2022", "pof2009", "pof2018"), names(lista_indicadores))
 
   # stop if there is any indicator that is not defined in lista_indicadores
   if(length(valor_teste) > 0) {
@@ -101,7 +107,7 @@ creates_longer_dataset<- function(
     purrr::pwalk(bidexpansaoenergetica::create_indicator_data)
 
   ## Merges all data for each dataset
-  c("pnad2019", "pnad2022", "pof2009", "pof2018") |>
+  c("pnad2016", "pnad2017", "pnad2018", "pnad2019", "pnad2022", "pof2009", "pof2018") |>
     purrr::walk(\(name) {
       dataset <- glue::glue("{export_path}longer_indicators/") |>
         list.files(pattern = name, full.names = T) |>
@@ -119,7 +125,7 @@ creates_longer_dataset<- function(
     })
 
   ## Concatenates all data
-  allData <- c("pnad2019", "pnad2022", "pof2009", "pof2018") |>
+  allData <- c("pnad2016", "pnad2017", "pnad2018", "pnad2019", "pnad2022", "pof2009", "pof2018") |>
     purrr::map(\(name) {
       dataset <- glue::glue("{export_path}longer_indicators/") |>
         list.files(pattern = name, full.names = T) |>
@@ -133,7 +139,7 @@ creates_longer_dataset<- function(
       readRDS(file)
     }) |>
     purrr::list_rbind()
-  file <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds")
+  file <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2016e2017e2018e2019e2022.rds")
   saveRDS(allData, file)
 
 }
