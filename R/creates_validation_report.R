@@ -26,6 +26,7 @@
 creates_validation_report <- function(
     export_path = "ETL_pipeline/data/data-output/"
 ){
+  print(list.files(export_path, pattern = "^df_(.+)_longer.rds$"))
   rmarkdown::render(
     input = system.file("validation_report.Rmd", package = "bidexpansaoenergetica"),
     output_file = glue::glue("{export_path}validation_report.html"),

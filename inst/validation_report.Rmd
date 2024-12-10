@@ -8,9 +8,9 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
-df_longer <- readRDS(
-  glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds")
-) |> 
+df_longer <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds") |> 
+  here::here() |> 
+  readRDS() |> 
   dplyr::mutate(database = glue::glue("{database}{time}"))
 
 df_wider <- list.files(export_path, pattern = "^df_(.+)_longer.rds$")  |>
