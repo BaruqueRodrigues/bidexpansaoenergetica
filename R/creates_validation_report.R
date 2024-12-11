@@ -26,12 +26,12 @@
 creates_validation_report <- function(
     export_path = "ETL_pipeline/data/data-output/"
 ){
-  if (!dir.exists(export_path)) {
-    dir.create(export_path, recursive = T)
-  }
+  file <- glue::glue("{export_path}") |>
+    list.files(pattern = "^_df_metrics_longer_")
+  file <- file[nchar(file) == max(nchar(file))]
+  file <- glue::glue("{export_path}{file}")
 
-  df_longer <- glue::glue("{export_path}_df_metrics_longer_pof2009e2018_pnad2019e2022.rds") |>
-    readRDS() |>
+  df_longer <- readRDS(file) |>
     dplyr::mutate(database = glue::glue("{database}{time}"))
 
   df_wider <- glue::glue("{export_path}microdados-wider-rds") |>
