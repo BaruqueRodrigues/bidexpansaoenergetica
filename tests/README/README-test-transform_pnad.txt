@@ -26,5 +26,5 @@ A variável NUMERO_PESSOAS_DOMICILIO é calculada corretamente.
 7. Manutenção da integridade dos dados:
 Certifica que os dados de entrada, como o código da UPA e o número do domicílio, são mantidos nas variáveis transformadas.
 
-8. Casos de borda e dados mínimos:
-Testa o comportamento da função com dados mínimos (apenas uma linha) e com valores ausentes em variáveis como S01018 e S01019.
+8. Casos de borda e dataset reduzido:
+Testa o comportamento da função com quantidade de dados reduzida (apenas uma linha) e com valores ausentes em variáveis como S01018 e S01019.

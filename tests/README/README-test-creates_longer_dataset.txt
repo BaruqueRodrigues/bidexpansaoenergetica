@@ -16,7 +16,7 @@ indicadores organizados em uma lista nomeada.
 
 5. Concatenação de dados: Verifica se todos os dados processados são combinados em um único arquivo .rds.
 
-6. Erros em entradas inválidas:
+6. Erros em entradas inválidas.
 
 7. Lista de indicadores vazia.
 

@@ -1,6 +1,6 @@
 Este código contém uma série de testes escritos em R 
 usando o pacote testthat para validar a funcionalidade 
-de uma função chamada baixa_pof, que parece ser responsável 
+de uma função chamada baixa_pof, que é responsável 
 por baixar, organizar e manipular dados da Pesquisa de Orçamentos 
 Familiares (POF) de 2009 e 2018. Abaixo está um resumo das partes 
 principais:

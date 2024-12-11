@@ -1,7 +1,7 @@
 O código consiste em uma bateria de testes em R 
 utilizando o pacote testthat para validar a 
 funcionalidade da função baixa_visita_1_pnadc, 
-que parece ser responsável por baixar arquivos 
+que é responsável por baixar arquivos 
 relacionados à Pesquisa Nacional por Amostra de 
 Domicílios Contínua (PNADC) para um determinado ano.
 

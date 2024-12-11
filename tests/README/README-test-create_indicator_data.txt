@@ -1,7 +1,7 @@
 O código apresenta uma suíte de testes automatizados para a função 
 create_indicator_data, que processa dados de métricas com base em 
 determinantes e indicadores fornecidos, exportando os resultados 
-em um formato consolidado. Os testes utilizam o pacote testthat, 
+em um formato apropriado. Os testes utilizam o pacote testthat, 
 criando cenários variados para validar o comportamento da função.
 
 1. Criação de Diretório de Exportação:
@@ -44,9 +44,9 @@ Valida que as colunas de determinantes são processadas corretamente, mesmo em c
 
 Garante que os campos relacionados ao banco de dados e ano estão atribuídos corretamente no output.
 
-11. Cenários com Dados Mínimos:
+11. Cenários com daset pequeno
 
-Testa se a função consegue processar corretamente conjuntos de dados com apenas uma linha.
+Testa se a função consegue processar corretamente com um dataset pequeno.
 
 12. Salvar Arquivos no Caminho Correto:
 

@@ -1,6 +1,6 @@
 O código realiza uma série de testes para validar o comportamento 
-da função calculate_indicators, que parece calcular indicadores 
-estatísticos a partir de um conjunto de dados. Os testes são 
+da função calculate_indicators, que calcula indicadores 
+a partir de um conjunto de dados. Os testes são 
 implementados utilizando o pacote testthat, e o foco está em 
 garantir a robustez e correção da função em diversos cenários.
 
@@ -15,7 +15,7 @@ Certifica-se de que as colunas no resultado da função correspondem às esperad
 
 3. Cálculo Correto de Indicadores Ponderados:
 
-Verifica se os cálculos de totais ponderados e proporções estão corretos ao comparar resultados com valores calculados manualmente.
+Verifica se os cálculos ponderados e proporções estão corretos ao comparar resultados com valores calculados manualmente.
 
 4. Suporte a Diferentes Bases de Dados:
 
@@ -41,13 +41,14 @@ Verifica se a função retorna mensagens de erro apropriadas.
 
 Confirma que as transformações realizadas pela função não comprometem a consistência dos dados, como o total ponderado.
 
-9. Casos com Dados Mínimos:
+9. Casos com datasets pequenos:
 
-Avalia se a função opera corretamente com datasets pequenos ou com apenas uma linha de dados.
+Avalia se a função opera corretamente com dataset menor que o real.
 
 10. Manipulação de Múltiplos Valores para UF:
 
 Testa o comportamento da função ao trabalhar com múltiplas Unidades Federativas, garantindo que o agrupamento seja tratado corretamente.
+
 11. Parâmetros de Tempo:
 
-Valida a configuração de parâmetros relacionados ao tempo, como year e time_period, garantindo que eles sejam corretamente representados no resultado.
+Valida a configuração de parâmetros relacionados ao tempo como year e time_period, garantindo que eles sejam corretamente representados no resultado.
