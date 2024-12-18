@@ -32,6 +32,7 @@ calculate_indicators <- function(dataset, determinant_columns,
                                  indicator_columns, with_filters,
                                  database, year = "2018",	time_period = "year") {
 
+
   # Define categorias das operações
   peso_determ <- c("UF", "determinante_nome", "determinante_niveis")
   peso_indic <- c("UF", "COD_UPA", "NUM_DOM", "NUM_UC",
@@ -45,7 +46,9 @@ calculate_indicators <- function(dataset, determinant_columns,
     "indicador_nome", "indicador_binario",
     "peso_indicador", "indicador_n_ponderado_c",
     "ref_determinante_niveis_n_ponderado",
-    "ref_total_n_ponderado"
+    "ref_determinante_niveis_n_ponderado_IR",
+    "ref_total_n_ponderado",
+    "ref_total_n_ponderado_IR"
   )
 
   # Verifica o tipo de database. POF usam NUM_UC, as PNAD não usam
@@ -67,7 +70,13 @@ calculate_indicators <- function(dataset, determinant_columns,
     # #to-do: teste para o caso que o indicador tenha que somar 100%
     # mutate(IA0101 = 1) |>
     # Criação da coluna peso total que vira o quociente
-    dplyr::mutate(ref_total_n_ponderado = sum(PESO_FINAL, na.rm = TRUE)) %>%
+    dplyr::mutate(
+      #Quociente geral
+      ref_total_n_ponderado = sum(PESO_FINAL, na.rm = TRUE),
+      #Construção do Quociente para os indicadores de Renda
+      PESO_FINAL_IR = ifelse(EAIR0301 == 0, 0, PESO_FINAL),
+      ref_total_n_ponderado_IR = sum(PESO_FINAL_IR, na.rm = TRUE)
+    ) %>%
     # Pivoteando os determinantes para agrupar por todos eles
     tidyr::pivot_longer(
       cols = dplyr::all_of(determinant_columns),
@@ -77,7 +86,9 @@ calculate_indicators <- function(dataset, determinant_columns,
     # add total per condicionate + filter
     left_join(. |>
                 summarise(.by = all_of(peso_determ),
-                          ref_determinante_niveis_n_ponderado = sum(PESO_FINAL, na.rm = TRUE))
+                          ref_determinante_niveis_n_ponderado = sum(PESO_FINAL, na.rm = TRUE),
+                          ref_determinante_niveis_n_ponderado_IR = sum(PESO_FINAL_IR, na.rm = TRUE)
+                )
     ) |>
     # # #checando se o peso está sendo mantido
     # # note que cada linha única, e portanto, cada peso, é repetido o número de determinantes
@@ -90,6 +101,10 @@ calculate_indicators <- function(dataset, determinant_columns,
       cols = dplyr::all_of(indicator_columns),
       names_to = "indicador_nome",
       values_to = "indicador_binario"
+    ) |>
+    # Tratamento PESO_FINAL para os Indicadores de RENDA
+    dplyr::mutate(
+      PESO_FINAL = ifelse(EAIR0301 == 0 & stringr::str_detect(indicador_nome, "IR[:digit:]{4}"), 0, PESO_FINAL)
     )
   # #checando se o peso está sendo mantido
   #   dplyr::summarise(peso = sum(PESO_FINAL, na.rm = TRUE),
@@ -113,6 +128,8 @@ calculate_indicators <- function(dataset, determinant_columns,
   result_polars <- polars_df$group_by(peso_indic)$agg(
     polars::pl$col("PESO_FINAL")$sum()$alias("peso_indicador"),
     polars::pl$col("ref_determinante_niveis_n_ponderado")$first()$alias("ref_determinante_niveis_n_ponderado"),
+    polars::pl$col("ref_determinante_niveis_n_ponderado_IR")$first()$alias("ref_determinante_niveis_n_ponderado_IR"),
+    polars::pl$col("ref_total_n_ponderado_IR")$first(),
     polars::pl$col("ref_total_n_ponderado")$first()
   )$with_columns(
     (polars::pl$col("indicador_binario")*polars::pl$col("peso_indicador"))$alias("indicador_n_ponderado_c")
@@ -135,10 +152,18 @@ calculate_indicators <- function(dataset, determinant_columns,
       ref_total_n_amostra = indicador_n_amostra_c + indicador_n_amostra,
       #to-do: um teste, o valor ref_total_n_amostra deveria ser sempre igual ao tamanho da amostra inicial
       # no caso da POF, seria o 58039 (talvez não esteja batendo devido aos missings)
-      ref_total_n_ponderado = first(ref_total_n_ponderado),
-      ref_determinante_niveis_n_ponderado = first(ref_determinante_niveis_n_ponderado),
+      # Tratamento para os indicadores de Renda
+      ref_total_n_ponderado = ifelse(stringr::str_detect(indicador_nome[1],"^IR[:digit:]{4}"),
+                                     first(ref_total_n_ponderado_IR),
+                                     first(ref_total_n_ponderado)
+      ),
+      # Tratamento para os indicadores de Renda
+      ref_determinante_niveis_n_ponderado = ifelse(stringr::str_detect(indicador_nome[1],"^IR[:digit:]{4}"),
+                                                   first(ref_determinante_niveis_n_ponderado_IR),
+                                                   first(ref_determinante_niveis_n_ponderado)
+      ),
       #indicador_n_ponderado_c_old= sum(peso_indicador, na.rm = TRUE),
-      indicador_n_ponderado_c= sum(indicador_n_ponderado_c, na.rm = TRUE),
+      indicador_n_ponderado_c = sum(indicador_n_ponderado_c, na.rm = TRUE),
       #gambi para garantir 1 - de final value
       #indicador_p_ponderado_old = 1 - (indicador_n_ponderado_c_old/ ref_total_n_ponderado),
       indicador_p_ponderado = 1 - (indicador_n_ponderado_c/ ref_determinante_niveis_n_ponderado),

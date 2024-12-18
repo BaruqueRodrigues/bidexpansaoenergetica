@@ -63,19 +63,19 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   ) |>
-    mutate(geo = "uf") |>
-    mutate(aggregation = "household") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "uf") |>
+    dplyr::mutate(aggregation = "household") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per household: UF + sem determinantes  (2/12) -----
   #parameters
   dataset <- df_metrics_byUC  |>
     # gambiarra p/ ter o resultado de REG sem a segmentação por Determinante
     #passo 1: exclui todos os determinantes
-    select(-matches("D[A-Z]\\d{2}")) |>
+    dplyr::select(-matches("D[A-Z]\\d{2}")) |>
     #passo 2: transformar todos os possíveis valores do pseudo-determinante em 1 valor único
-    mutate(all_values = NA)
-  determinant_columns <- dataset |> select(all_values) |> names()
+    dplyr::mutate(all_values = NA)
+  determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #applying the aggregation function
   df_longer_household_UF_all_values <- bidexpansaoenergetica::calculate_indicators(
@@ -86,15 +86,15 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   )  |>
-    mutate(geo = "uf") |>
-    mutate(aggregation = "household") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "uf") |>
+    dplyr::mutate(aggregation = "household") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per household: REG + com determinantes (3/12) -----
   #parameters
   dataset <- df_metrics_byUC |>
     #to-do: gambiarra para ter a visão por Região (e não UF) s/ precisar mudar a função
-    mutate(UF = case_when(
+    dplyr::mutate(UF = case_when(
       grepl("^1", as.character(UF)) == TRUE ~ 1, #Norte
       grepl("^2", as.character(UF)) == TRUE ~ 2, #Nordeste
       grepl("^3", as.character(UF)) == TRUE ~ 3, #Sudeste
@@ -113,15 +113,15 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   )  |>
-    mutate(geo = "region") |>
-    mutate(aggregation = "household") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "region") |>
+    dplyr::mutate(aggregation = "household") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per household: REG + sem determinantes (4/12) -----
   #parameters
   dataset <- df_metrics_byUC |>
     #to-do: gambiarra para ter a visão por Região (e não UF) s/ precisar mudar a função
-    mutate(UF = case_when(
+    dplyr::mutate(UF = case_when(
       grepl("^1", as.character(UF)) == TRUE ~ 1, #Norte
       grepl("^2", as.character(UF)) == TRUE ~ 2, #Nordeste
       grepl("^3", as.character(UF)) == TRUE ~ 3, #Sudeste
@@ -131,10 +131,10 @@ create_indicator_data <- function(path, database, year, indicator,
     )) |>
     # gambiarra p/ ter o resultado de REG sem a segmentação por Determinante
     #passo 1: exclui todos os determinantes
-    select(-matches("D[A-Z]\\d{2}")) |>
+    dplyr::select(-matches("D[A-Z]\\d{2}")) |>
     #passo 2: transformar todos os possíveis valores do pseudo-determinante em 1 valor único
-    mutate(all_values = NA)
-  determinant_columns <- dataset |> select(all_values) |> names()
+    dplyr::mutate(all_values = NA)
+  determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #applying the aggregation function
   df_longer_household_REG_all_values <- bidexpansaoenergetica::calculate_indicators(
@@ -145,13 +145,13 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   )  |>
-    mutate(geo = "region") |>
-    mutate(aggregation = "household") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "region") |>
+    dplyr::mutate(aggregation = "household") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per household: BRA + com determinantes (5/12) -----
   #parameters
-  dataset <- df_metrics_byUC |> mutate(UF = 0)
+  dataset <- df_metrics_byUC |> dplyr::mutate(UF = 0)
   determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
@@ -163,19 +163,19 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   ) |>
-    mutate(geo = "country") |>
-    mutate(aggregation = "household") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "country") |>
+    dplyr::mutate(aggregation = "household") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per household: BRA + sem determinantes (6/12) -----
   #parameters
   dataset <- df_metrics_byUC |>
     #gambiarra p/ ter o resultado de REG sem a segmentação por Determinante
     #passo 1: exclui todos os determinantes
-    select(-matches("D[A-Z]\\d{2}")) |>
+    dplyr::select(-matches("D[A-Z]\\d{2}")) |>
     #passo 2: transformar todos os possíveis valores do pseudo-determinante em 1 valor único
-    mutate(all_values = NA)
-  determinant_columns <- dataset |> select(all_values) |> names()
+    dplyr::mutate(all_values = NA)
+  determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #applying the aggregation function
   df_longer_household_BRA_all_values <- bidexpansaoenergetica::calculate_indicators(
@@ -186,20 +186,20 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   ) |>
-    mutate(UF = 0,
-           determinante_nome = "all_values",
-           determinante_niveis = NA) |>
-    mutate(geo = "country") |>
-    mutate(aggregation = "household") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(UF = 0,
+                  determinante_nome = "all_values",
+                  determinante_niveis = NA) |>
+    dplyr::mutate(geo = "country") |>
+    dplyr::mutate(aggregation = "household") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## aggregation per individual: -----
   ## per individual: UF + com determinantes (7/12) -----
   #parameters
   dataset <- df_metrics_byUC |>
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
-    mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
-    select(-NUMERO_PESSOAS_DOMICILIO)
+    dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::select(-NUMERO_PESSOAS_DOMICILIO)
   determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
@@ -211,22 +211,22 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   ) |>
-    mutate(geo = "uf") |>
-    mutate(aggregation = "individual") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "uf") |>
+    dplyr::mutate(aggregation = "individual") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per individual: UF + sem determinantes (8/12) -----
   #parameters
   dataset <- df_metrics_byUC  |>
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
-    mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
-    select(-NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::select(-NUMERO_PESSOAS_DOMICILIO) |>
     # gambiarra p/ ter o resultado de REG sem a segmentação por Determinante
     #passo 1: exclui todos os determinantes
-    select(-matches("D[A-Z]\\d{2}")) |>
+    dplyr::select(-matches("D[A-Z]\\d{2}")) |>
     #passo 2: transformar todos os possíveis valores do pseudo-determinante em 1 valor único
-    mutate(all_values = NA)
-  determinant_columns <- dataset |> select(all_values) |> names()
+    dplyr::mutate(all_values = NA)
+  determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #after call the previously function to calculate indicators parameters
   #applying the aggregation function
@@ -238,18 +238,18 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   )  |>
-    mutate(geo = "uf") |>
-    mutate(aggregation = "individual") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "uf") |>
+    dplyr::mutate(aggregation = "individual") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per individual REG + com determinantes (9/12) ------
   #parameters
   dataset <- df_metrics_byUC |>
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
-    mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
-    select(-NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::select(-NUMERO_PESSOAS_DOMICILIO) |>
     #to-do: gambiarra para ter a visão por Região (e não UF) s/ precisar mudar a função
-    mutate(UF = case_when(
+    dplyr::mutate(UF = case_when(
       grepl("^1", as.character(UF)) == TRUE ~ 1, #Norte
       grepl("^2", as.character(UF)) == TRUE ~ 2, #Nordeste
       grepl("^3", as.character(UF)) == TRUE ~ 3, #Sudeste
@@ -268,18 +268,18 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   )  |>
-    mutate(geo = "region") |>
-    mutate(aggregation = "individual") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "region") |>
+    dplyr::mutate(aggregation = "individual") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per individual REG + sem determinantes (10/12) ------
   #parameters
   dataset <- df_metrics_byUC |>
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
-    mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
-    select(-NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::select(-NUMERO_PESSOAS_DOMICILIO) |>
     #to-do: gambiarra para ter a visão por Região (e não UF) s/ precisar mudar a função
-    mutate(UF = case_when(
+    dplyr::mutate(UF = case_when(
       grepl("^1", as.character(UF)) == TRUE ~ 1, #Norte
       grepl("^2", as.character(UF)) == TRUE ~ 2, #Nordeste
       grepl("^3", as.character(UF)) == TRUE ~ 3, #Sudeste
@@ -289,10 +289,10 @@ create_indicator_data <- function(path, database, year, indicator,
     )) |>
     # gambiarra p/ ter o resultado de REG sem a segmentação por Determinante
     #passo 1: exclui todos os determinantes
-    select(-matches("D[A-Z]\\d{2}")) |>
+    dplyr::select(-matches("D[A-Z]\\d{2}")) |>
     #passo 2: transformar todos os possíveis valores do pseudo-determinante em 1 valor único
-    mutate(all_values = NA)
-  determinant_columns <- dataset |> select(all_values) |> names()
+    dplyr::mutate(all_values = NA)
+  determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #applying the aggregation function
   df_longer_individual_REG_all_values <- bidexpansaoenergetica::calculate_indicators(
@@ -303,17 +303,17 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   )  |>
-    mutate(geo = "region") |>
-    mutate(aggregation = "individual") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "region") |>
+    dplyr::mutate(aggregation = "individual") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per individual BRA + com determinantes (11/12) -----
   #parameters
   dataset <- df_metrics_byUC |>
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
-    mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
-    select(-NUMERO_PESSOAS_DOMICILIO) |>
-    mutate(UF = 0)
+    dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::select(-NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::mutate(UF = 0)
   determinant_columns <- dataset |> colnames() |> stringr::str_subset("D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
@@ -325,25 +325,25 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   ) |>
-    mutate(geo = "country") |>
-    mutate(aggregation = "individual") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(geo = "country") |>
+    dplyr::mutate(aggregation = "individual") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## per individual BRA + sem determinantes (12/12) ------
   #parameters
   dataset <- df_metrics_byUC |>
     #gambi para que o PESO domiciliar (per household) vire o PESO pessoa (per individual)
-    mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
-    select(-NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
+    dplyr::select(-NUMERO_PESSOAS_DOMICILIO) |>
     #gambiarra p/ ter o resultado de REG sem a segmentação por Determinante
     #passo 1: exclui todos os determinantes
-    select(-matches("D[A-Z]\\d{2}")) |>
+    dplyr::select(-matches("D[A-Z]\\d{2}")) |>
     #passo 2: transformar todos os possíveis valores do pseudo-determinante em 1 valor único
-    mutate(all_values = NA)
-  determinant_columns <- dataset |> select(all_values) |> names()
+    dplyr::mutate(all_values = NA)
+  determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #applying the aggregation function
-  df_longer_individual_BRA_all_values <- bidexpansaoenergetica::calculate_indicators(
+  df_longer_individual_BRA_all_values <- bidexpansaoenergetica::bidexpansaoenergetica::calculate_indicators(
     dataset = dataset,
     determinant_columns,
     indicator,
@@ -351,12 +351,12 @@ create_indicator_data <- function(path, database, year, indicator,
     database = database,
     year = year
   ) |>
-    mutate(UF = 0,
-           determinante_nome = "all_values",
-           determinante_niveis = NA) |>
-    mutate(geo = "country") |>
-    mutate(aggregation = "individual") |>
-    mutate(UF = as.character(UF))
+    dplyr::mutate(UF = 0,
+                  determinante_nome = "all_values",
+                  determinante_niveis = NA) |>
+    dplyr::mutate(geo = "country") |>
+    dplyr::mutate(aggregation = "individual") |>
+    dplyr::mutate(UF = as.character(UF))
 
   ## df_longer_Agg (concatenating all) -----
   #parameters
@@ -374,16 +374,26 @@ create_indicator_data <- function(path, database, year, indicator,
     bind_rows(df_longer_individual_BRA_filtered) |>
     bind_rows(df_longer_individual_BRA_all_values) |>
     #to-do: precisa ajustar esses nomes dentro das funções
-    rename(geo_value = UF) |>
-    rename(ref_total_populacao_n_ponderado = ref_total_n_ponderado) |>
-    # rename(peso_total_populacao = ref_total_n_ponderado) |>
-    rename(var_filtro_nome = determinante_nome) |>
-    rename(var_filtro_niveis = determinante_niveis) |>
-    rename(ref_var_filtro_niveis_n_ponderado = ref_determinante_niveis_n_ponderado) |>
-    #rename(peso_var_filtro_niveis = ref_determinante_niveis_n_ponderado) |>
-    mutate(indicador_p_ponderado_c = 1 - indicador_p_ponderado) |>
-    mutate(indicador_n_ponderado = ref_var_filtro_niveis_n_ponderado  - indicador_n_ponderado_c) |>
-    relocate(
+    dplyr::rename(geo_value = UF) |>
+    dplyr::rename(ref_total_populacao_n_ponderado = ref_total_n_ponderado) |>
+    # dplyr::rename(peso_total_populacao = ref_total_n_ponderado) |>
+    dplyr::rename(var_filtro_nome = determinante_nome) |>
+    dplyr::rename(var_filtro_niveis = determinante_niveis) |>
+    dplyr::rename(ref_var_filtro_niveis_n_ponderado = ref_determinante_niveis_n_ponderado) |>
+    #dplyr::rename(peso_var_filtro_niveis = ref_determinante_niveis_n_ponderado) |>
+    dplyr::mutate(indicador_p_ponderado_c = 1 - indicador_p_ponderado) |>
+    dplyr::mutate(indicador_n_ponderado = ref_var_filtro_niveis_n_ponderado  - indicador_n_ponderado_c) |>
+    dplyr::mutate(indicador_final_proporcao = indicador_p_ponderado * 100,
+                  var_filtro_niveis = dplyr::case_when(
+                    is.na(var_filtro_niveis) ~ "all_values",
+                    .default = var_filtro_niveis
+                  )
+    ) |>
+    dplyr::mutate(database = database) |>
+    dplyr::relocate(
+      database,
+      time_period,
+      time,
       aggregation,
       geo,
       geo_value,
@@ -393,16 +403,14 @@ create_indicator_data <- function(path, database, year, indicator,
       indicador_n_amostra_c,
       indicador_n_amostra,
       ref_total_n_amostra,
-      ref_var_filtro_niveis_n_ponderado,
-      ref_total_populacao_n_ponderado,
       indicador_n_ponderado_c,
       indicador_n_ponderado,
+      ref_var_filtro_niveis_n_ponderado,
+      ref_total_populacao_n_ponderado,
       indicador_p_ponderado_c,
       indicador_p_ponderado,
-      time,
-      time_period,
+      indicador_final_proporcao
     ) |>
-    mutate(database = database) |>
     glimpse()
 
   #check: geo by var_filtro and indicador
