@@ -343,7 +343,7 @@ create_indicator_data <- function(path, database, year, indicator,
   determinant_columns <- dataset |> dplyr::select(all_values) |> names()
 
   #applying the aggregation function
-  df_longer_individual_BRA_all_values <- bidexpansaoenergetica::bidexpansaoenergetica::calculate_indicators(
+  df_longer_individual_BRA_all_values <- bidexpansaoenergetica::calculate_indicators(
     dataset = dataset,
     determinant_columns,
     indicator,
