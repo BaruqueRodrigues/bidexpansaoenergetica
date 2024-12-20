@@ -383,13 +383,17 @@ create_indicator_data <- function(path, database, year, indicator,
     #dplyr::rename(peso_var_filtro_niveis = ref_determinante_niveis_n_ponderado) |>
     dplyr::mutate(indicador_p_ponderado_c = 1 - indicador_p_ponderado) |>
     dplyr::mutate(indicador_n_ponderado = ref_var_filtro_niveis_n_ponderado  - indicador_n_ponderado_c) |>
+    dplyr::mutate(database = database) |>
+    glimpse()
+
+
+  df_longer_Agg <- df_longer_Agg |>
     dplyr::mutate(indicador_final_proporcao = indicador_p_ponderado * 100,
                   var_filtro_niveis = dplyr::case_when(
                     is.na(var_filtro_niveis) ~ "all_values",
                     .default = var_filtro_niveis
                   )
     ) |>
-    dplyr::mutate(database = database) |>
     dplyr::relocate(
       database,
       time_period,
@@ -410,8 +414,7 @@ create_indicator_data <- function(path, database, year, indicator,
       indicador_p_ponderado_c,
       indicador_p_ponderado,
       indicador_final_proporcao
-    ) |>
-    glimpse()
+    )
 
   #check: geo by var_filtro and indicador
   #to-do: deveria ter um teste para garantir que
