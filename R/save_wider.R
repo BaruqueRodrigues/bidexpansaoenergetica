@@ -92,7 +92,7 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
     if(database_year == 2009)
     {
       data$time <- "2009"
-    }else if(databse_year == 2018)
+    }else if(database_year == 2018)
     {
       data$time <- "2018"
     }else{
