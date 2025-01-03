@@ -203,12 +203,13 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                             list(SUM = ~sum(., na.rm = T),
                                  AVG = ~mean(., na.rm = T),
                                  STD = ~sd(., na.rm = T),
-                                 CVR = ~ sd(., na.rm = T) / mean(., na.rm = T),
+                                 CVR = ~sd(., na.rm = T) / mean(., na.rm = T),
                                  MED = ~quantile(., 0.5, , na.rm = T),
                                  MIN = ~min(., na.rm = T),
-                                 Q01 = ~quantile(., 0.2, , na.rm = T),
+                                 Q01 = ~quantile(., 0.25, , na.rm = T),
                                  Q03 = ~quantile(., 0.75, , na.rm = T),
-                                 MAX = ~max(., na.rm = T)),
+                                 MAX = ~max(., na.rm = T),
+                                 PZE = ~sum((.x == 0), na.rm = T) / nrow(.x)),
                             .names = "{col}_{.fn}")
     ) |>
     dplyr::ungroup() |>
@@ -235,9 +236,10 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                                  CVR = ~ sd(., na.rm = T) / mean(., na.rm = T),
                                  MED = ~quantile(., 0.5, , na.rm = T),
                                  MIN = ~min(., na.rm = T),
-                                 Q01 = ~quantile(., 0.2, , na.rm = T),
+                                 Q01 = ~quantile(., 0.25, , na.rm = T),
                                  Q03 = ~quantile(., 0.75, , na.rm = T),
-                                 MAX = ~max(., na.rm = T)),
+                                 MAX = ~max(., na.rm = T),
+                                 PZE = ~sum((.x == 0), na.rm = T) / nrow(.x)),
                             .names = "{col}_{.fn}")
     ) |>
     dplyr::ungroup() |>
@@ -268,9 +270,10 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                                  CVR = ~ sd(., na.rm = T) / mean(., na.rm = T),
                                  MED = ~quantile(., 0.5, , na.rm = T),
                                  MIN = ~min(., na.rm = T),
-                                 Q02 = ~quantile(., 0.2, , na.rm = T),
+                                 Q02 = ~quantile(., 0.25, , na.rm = T),
                                  Q03 = ~quantile(., 0.75, , na.rm = T),
-                                 MAX = ~max(., na.rm = T)),
+                                 MAX = ~max(., na.rm = T),
+                                 PZE = ~sum((.x == 0), na.rm = T) / nrow(.x)),
                             .names = "{col}_{.fn}")
     ) |>
     dplyr::ungroup() |>
@@ -291,12 +294,13 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                             list(SUM = ~sum(., na.rm = T),
                                  AVG = ~mean(., na.rm = T),
                                  STD = ~sd(., na.rm = T),
-                                 CVR = ~ sd(., na.rm = T) / mean(., na.rm = T),
+                                 CVR = ~sd(., na.rm = T) / mean(., na.rm = T),
                                  MED = ~quantile(., 0.5, , na.rm = T),
                                  MIN = ~min(., na.rm = T),
-                                 Q02 = ~quantile(., 0.2, , na.rm = T),
+                                 Q02 = ~quantile(., 0.25, , na.rm = T),
                                  Q03 = ~quantile(., 0.75, , na.rm = T),
-                                 MAX = ~max(., na.rm = T)),
+                                 MAX = ~max(., na.rm = T),
+                                 PZE = ~sum((.x == 0), na.rm = T) / nrow(.x)),
                             .names = "{col}_{.fn}")
     ) |>
     dplyr::ungroup() |>
@@ -329,12 +333,13 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                             list(SUM = ~sum(., na.rm = T),
                                  AVG = ~mean(., na.rm = T),
                                  STD = ~sd(., na.rm = T),
-                                 CVR = ~ sd(., na.rm = T) / mean(., na.rm = T),
+                                 CVR = ~sd(., na.rm = T) / mean(., na.rm = T),
                                  MED = ~quantile(., 0.5, , na.rm = T),
                                  MIN = ~min(., na.rm = T),
-                                 Q02 = ~quantile(., 0.2, , na.rm = T),
+                                 Q02 = ~quantile(., 0.25, , na.rm = T),
                                  Q03 = ~quantile(., 0.75, , na.rm = T),
-                                 MAX = ~max(., na.rm = T)),
+                                 MAX = ~max(., na.rm = T),
+                                 PZE = ~sum((.x == 0), na.rm = T)  / nrow(.x)),
                             .names = "{col}_{.fn}")
     ) |>
     dplyr::ungroup() |>
@@ -368,9 +373,10 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                                  CVR = ~ sd(., na.rm = T) / mean(., na.rm = T),
                                  MED = ~quantile(., 0.5, , na.rm = T),
                                  MIN = ~min(., na.rm = T),
-                                 Q02 = ~quantile(., 0.2, , na.rm = T),
+                                 Q02 = ~quantile(., 0.25, , na.rm = T),
                                  Q03 = ~quantile(., 0.75, , na.rm = T),
-                                 MAX = ~max(., na.rm = T)),
+                                 MAX = ~max(., na.rm = T),
+                                 PZE = ~sum((.x == 0), na.rm = T) / nrow(.x)),
                             .names = "{col}_{.fn}")
     ) |>
     dplyr::ungroup() |>

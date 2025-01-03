@@ -13,8 +13,8 @@
 #' @examples
 #' @importFrom magrittr "%>%"
 #' @export
-baixa_censo <- function(destination_dir = 'data-raw/censo-ibge-2022/'){
-
+baixa_censo <- function(destination_dir = 'data-raw/censo-ibge-2022/')
+{
 
   # Define a função para configurar a localidade baseada no sistema operacional
   set_locale_based_on_os <- function() {
