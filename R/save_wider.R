@@ -129,7 +129,7 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
 
   temp <- data
 
-  (file <- paste0("df_",database_name, database_year,
+  (file <- paste0("df_", database_name, database_year,
                   "_nInd", length(indicator_columns),
                   "_nDet", length(determinant_columns),
                   "_nEst", length(estatisticas_columns)))
