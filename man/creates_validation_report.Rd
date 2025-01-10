@@ -8,8 +8,8 @@ creates_validation_report(export_path = "ETL_pipeline/data/data-output/")
 }
 \arguments{
 \item{export_path}{A character string specifying the directory in
-which the longer and wider datasets are stored.
-Default is `"ETL_pipeline/data/data-output/"`.}
+which the longer dataset and the directory containing the wider
+datasets are stored. Default is `"ETL_pipeline/data/data-output/"`.}
 }
 \value{
 None. The function saves the report as a HTML file
