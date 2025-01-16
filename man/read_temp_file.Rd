@@ -2,7 +2,7 @@
 % Please edit documentation in R/vulnerability_metric.R
 \name{read_temp_file}
 \alias{read_temp_file}
-\title{Title}
+\title{This function read .rds file}
 \usage{
 read_temp_file(path = "./data/cdd_hdd_uf_2014_2023_dashboard.rds")
 }
@@ -13,5 +13,5 @@ read_temp_file(path = "./data/cdd_hdd_uf_2014_2023_dashboard.rds")
 dataframe with the rds file or NULL
 }
 \description{
-Title
+This function read .rds file
 }

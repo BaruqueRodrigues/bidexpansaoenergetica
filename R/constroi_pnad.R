@@ -24,7 +24,6 @@
 #' @export
 constroi_pnad <- function(diretorio, ano){
 
-
   # Define a função para configurar a localidade baseada no sistema operacional
   set_locale_based_on_os <- function() {
     sys_name <- Sys.info()["sysname"]
