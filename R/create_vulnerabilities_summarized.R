@@ -184,8 +184,9 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
     dir.create(exdir, recursive = TRUE)
   }
 
-  saveRDS(stringr::str_glue(
-    "{exdir}vt_summarized_by_vulnerability.rds"
-  ))
+  saveRDS(vt_summarized_by_vulnerability,
+          stringr::str_glue(
+            "{exdir}vt_summarized_by_vulnerability.rds"
+          ))
 
 }
