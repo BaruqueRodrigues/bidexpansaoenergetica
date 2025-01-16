@@ -15,22 +15,30 @@
 #'  )
 #' }
 #'
+#'
 
-if (!requireNamespace("geobr", quietly = TRUE)) {
-  # message(paste("O pacote", package_name, "não está instalado. Instalando agora..."))
-  install.packages("geobr")
-} else {
-  message(paste("O pacote já está instalado."))
-}
+# if("geobr" %in% rownames(utils::installed.packages())){
+#   utils::remove.packages("geobr")
+#   remotes::install_github("ipeaGIT/geobr", subdir = "r-package")
+# } else{
+#   remotes::install_github("ipeaGIT/geobr", subdir = "r-package")
+# }
+#
+# if("ipeadatar" %in% rownames(utils::installed.packages())){
+#   utils::remove.packages("ipeadatar")
+#   install.packages("ipeadatar", subdir = "r-package")
+# } else{
+#   install.packages("ipeadatar", subdir = "r-package")
+# }
 
-library(geobr)
+# library(geobr)
 
 create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-output/"){
 
   # Vulnerabilidades INMET ---
   geo_codes <- geobr::read_state()
 
-  data_inmet <- inmet_tabela_temp |>
+  data_inmet <- bidexpansaoenergetica::inmet_tabela_temp |>
     dplyr::inner_join(geo_codes |>
                         dplyr::select(abbrev_state, code_state, code_region),
                by = c("uf_abr" = "abbrev_state"))
