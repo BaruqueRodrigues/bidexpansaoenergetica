@@ -35,7 +35,7 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
            t_mean_annual_cut) |>
     dplyr::mutate(time_period = "year",
            geo = "uf",
-           variable_id = "CLIMA",
+           variable_id = "TEMP",
            stats_name = "AVG",
            stats_value_amostra = NA,
            stats_category = as.numeric(t_mean_annual_cut))
