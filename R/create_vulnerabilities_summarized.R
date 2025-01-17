@@ -41,30 +41,30 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
   data_inmet <- bidexpansaoenergetica::inmet_tabela_temp |>
     dplyr::inner_join(geo_codes |>
                         dplyr::select(abbrev_state, code_state, code_region),
-               by = c("uf_abr" = "abbrev_state"))
+                      by = c("uf_abr" = "abbrev_state"))
 
   # Clima para UF
   climauf <- data_inmet |>
     dplyr::select(code_region,
-           time = date,
-           geo_value = code_state,
-           # stats_value_ponderado = t_mean_annual,
-           stats_value = t_mean_annual,
-           t_mean_annual_cut) |>
+                  time = date,
+                  geo_value = code_state,
+                  # stats_value_ponderado = t_mean_annual,
+                  stats_value = t_mean_annual,
+                  t_mean_annual_cut) |>
     dplyr::mutate(time_period = "year",
-           geo = "uf",
-           variable_id = "TEMP",
-           stats_name = "AVG",
-           stats_value_amostra = NA,
-           stats_category = as.numeric(t_mean_annual_cut))
+                  geo = "uf",
+                  variable_id = "TEMP",
+                  stats_name = "AVG",
+                  stats_value_amostra = NA,
+                  stats_category = as.numeric(t_mean_annual_cut))
 
   # Função para vetorizar
   categ <- Vectorize(function(x) {
     c0 <- climauf |>
       dplyr::group_by(stats_category) |>
       dplyr::summarise(min = min(stats_value),
-                max = max(stats_value),
-                .groups = "drop") |>
+                       max = max(stats_value),
+                       .groups = "drop") |>
       dplyr::arrange(min) |>
       dplyr::filter(max > x) |>
       dplyr::slice(1) |>
@@ -76,37 +76,37 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
   climareg <-
     climauf |>
     dplyr::mutate(geo_value = code_region,
-           geo = "region") |>
+                  geo = "region") |>
     dplyr::group_by(geo, geo_value, time, time_period, variable_id, stats_name) |>
     dplyr::summarise(stats_value_amostra = ifelse(is.nan(mean(stats_value_amostra, na.rm = TRUE)),
-                                           NA,
-                                           mean(stats_value_amostra, na.rm = TRUE)),
-              stats_value = mean(stats_value, na.rm = TRUE),
-              .groups = "drop") |>
+                                                  NA,
+                                                  mean(stats_value_amostra, na.rm = TRUE)),
+                     stats_value = mean(stats_value, na.rm = TRUE),
+                     .groups = "drop") |>
     dplyr::mutate(stats_category = categ(stats_value))
 
   # Clima para o Brasil
   climacountry <- climareg |>
     dplyr::mutate(geo_value = 0,
-           geo = "country") |>
+                  geo = "country") |>
     dplyr::group_by(geo, geo_value, time, time_period, variable_id, stats_name) |>
     dplyr::summarise(stats_value_amostra = ifelse(is.nan(mean(stats_value_amostra, na.rm = TRUE)),
-                                           NA,
-                                           mean(stats_value_amostra, na.rm = TRUE)),
-              stats_value = mean(stats_value, na.rm = TRUE),
-              .groups = "drop") |>
+                                                  NA,
+                                                  mean(stats_value_amostra, na.rm = TRUE)),
+                     stats_value = mean(stats_value, na.rm = TRUE),
+                     .groups = "drop") |>
     dplyr::mutate(stats_category = categ(stats_value))
 
   # Tabela Final
   inmet_summarized_by_vulnerability <-
     dplyr::bind_rows(climacountry,
-              climareg,
-              climauf |>
-                dplyr::select(-code_region, -t_mean_annual_cut)) |>
+                     climareg,
+                     climauf |>
+                       dplyr::select(-code_region, -t_mean_annual_cut)) |>
     dplyr::mutate(geo_value = as.character(geo_value),
                   stats_category = as.character(stats_category),
                   database = "inmet",
-                  ) |>
+    ) |>
     dplyr::select(-stats_value_amostra)
 
 
@@ -201,7 +201,7 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
 
   vt_summarized_by_vulnerability <- dplyr::bind_rows(ipea_summarized_by_vulnerability,
                                                      inmet_summarized_by_vulnerability)
-  # Checa se o diretório existe, se não, cria o diretório
+  # Chec if directory exists, if not create it
   if (!dir.exists(exdir)) {
     dir.create(exdir, recursive = TRUE)
   }
