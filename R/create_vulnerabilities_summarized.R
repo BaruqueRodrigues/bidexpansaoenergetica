@@ -195,9 +195,7 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
         stats_value >= 0.699 & stats_value < 0.799 ~ "3",
         stats_value >= 0.799 ~ "4"
       )
-    ) |>
-    # Selecionando apenas o IDHM
-    dplyr::filter(variable_id == "IDHM")
+    )
 
   vt_summarized_by_vulnerability <- dplyr::bind_rows(ipea_summarized_by_vulnerability,
                                                      inmet_summarized_by_vulnerability)
