@@ -85,8 +85,10 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
               climareg,
               climauf |>
                 dplyr::select(-code_region, -t_mean_annual_cut)) |>
-    dplyr::mutate(time = as.double(time),
-                  database = "inmet") |>
+    dplyr::mutate(geo_value = as.character(geo_value),
+                  stats_category = as.character(stats_category),
+                  database = "inmet",
+                  ) |>
     dplyr::select(-stats_value_amostra)
 
 
@@ -130,14 +132,16 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
     dplyr::mutate(
       geo = dplyr::recode(geo,
                           Brasil = "country",
-                          Estados = "UF"),
+                          Estados = "uf"),
       time = lubridate::year(time)
     ) |>
     # Adicionando colunas
     dplyr::mutate(
       database = "ipea",
       time_period = "year",
-      stats_name = "AVG"
+      stats_name = "AVG",
+      geo_value = as.character(geo_value),
+      time = as.character(time)
     ) |>
     # Realocando ordem das colunas
     dplyr::relocate(
@@ -153,8 +157,8 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
       sep = 1
     ) |>
     dplyr::mutate(
-      geo_value = as.integer(geo_value),
-      geo = "region"
+      geo = "region",
+      time = as.character(time)
     ) |>
     dplyr::select(-uf) |>
     dplyr::group_by(database, time_period, time, geo, geo_value, variable_id, stats_name) |>
@@ -168,10 +172,10 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
     # Adicionando coluna stats_category
     dplyr::mutate(
       stats_category = dplyr::case_when(
-        stats_value >= 0 & stats_value < 0.599 ~ 1,
-        stats_value >= 0.599 & stats_value < 0.699 ~ 2,
-        stats_value >= 0.699 & stats_value < 0.799 ~ 3,
-        stats_value >= 0.799 ~ 4
+        stats_value >= 0 & stats_value < 0.599 ~ "1",
+        stats_value >= 0.599 & stats_value < 0.699 ~ "2",
+        stats_value >= 0.699 & stats_value < 0.799 ~ "3",
+        stats_value >= 0.799 ~ "4"
       )
     ) |>
     # Selecionando apenas o IDHM
@@ -179,7 +183,7 @@ create_vulnerabilities_summarized <- function(exdir = "./ETL_pipeline/data/data-
 
   vt_summarized_by_vulnerability <- dplyr::bind_rows(ipea_summarized_by_vulnerability,
                                                      inmet_summarized_by_vulnerability)
-  # Chec if directory exists, if not create it
+  # Checa se o diretório existe, se não, cria o diretório
   if (!dir.exists(exdir)) {
     dir.create(exdir, recursive = TRUE)
   }
