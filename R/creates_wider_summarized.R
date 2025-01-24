@@ -334,7 +334,7 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
     dplyr::bind_rows(df_wider_stats_RG) |>
     dplyr::mutate(stats_value_amostra = round(stats_value_amostra, 5),
                   stats_value_ponderado = round(stats_value_ponderado, 5)) |>
-    dplyr::relocate(stats_name, .before = stats_value_amostra) #%>%
+    dplyr::relocate(stats_name, .before = stats_value_amostra) %>%
   dplyr::anti_join(
     . |>
       subset.data.frame(
