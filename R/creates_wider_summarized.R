@@ -335,15 +335,27 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
     dplyr::mutate(stats_value_amostra = round(stats_value_amostra, 5),
                   stats_value_ponderado = round(stats_value_ponderado, 5)) |>
     dplyr::relocate(stats_name, .before = stats_value_amostra) %>%
-  dplyr::anti_join(
-    . |>
-      subset.data.frame(
-        database == "pnad" &
-          variable_id != c('EAIR0101', 'EAIR0102', 'EADD0101', 'EADD0102', 'EADD0103',
-                             'EADS0101', 'EADS0102', 'EADS0103', 'EADS0105', 'EADS0106', 
-                             'EADS0107')
-      )
-  )
+    dplyr::anti_join(
+      . |>
+        subset.data.frame(
+          database == "pnad" &
+            variable_id %in% c("EAIR0201", "EAIR0202", "EAIR0203", "EAIR0204", "EAIR0301",
+                               "EAIR0302", "EAIR0303", "EAIR0304", "EAIR0305", "EAIR0306",
+                               "EAIR0307", "EAIR0308", "EAIR0401", "EAIR0402", "EAIR0403",
+                               "EAIR0404", "EAIR0501", "EAIR0502", "EAIR0503", "EAIR0504",
+                               "EAIR0601", "EAIR0602", "EAIR0603", "EAIR0604", "EAIR0701",
+                               "EAIR0702", "EAIR0703", "EAIR0704", "EAIR0801", "EAIR0802",
+                               "EAIR0803", "EAIR0804", "EAIR0901", "EAIR0902", "EAIR0903",
+                               "EAIR0904", "EAIR1001", "EAIR1002", "EAIR1003", "EAIR1004",
+                               "EAIR1101", "EAIR1102", "EAIR1103", "EAIR1104", "EAIR1201",
+                               "EAIR1202", "EAIR1203", "EAIR1204", "EAIT0101", "EAIT0102",
+                               "EAIT0103", "EAIT0104", "EAIT0105", "EAIT0106", "EAIT0107",
+                               "EAIT0108", "EAIT0201", "EAIT0202", "EAIT0203", "EAIT0204",
+                               "EAIT0205", "EAIT0206", "EAIT0207", "EAIT0208", "EADD0104",
+                               "EADS0104"
+            )
+        )
+    )
 
   df_wider_stats |> dplyr::glimpse()
 
@@ -352,4 +364,3 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
   df_wider_stats |>
     saveRDS(stringr::str_glue("{exdir}/_df_metrics_wider_summarized_by_EA.rds"))
 }
-
