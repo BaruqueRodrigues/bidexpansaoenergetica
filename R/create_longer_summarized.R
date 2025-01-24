@@ -22,7 +22,7 @@ create_longer_summarized <- function(dir = './ETL_pipeline/data/data-output',
                                      exdir = './ETL_pipeline/data/data-output') {
 
   #read longer data
-  df_longer_raw <- readRDS(file.path(dir, "_df_metrics_longer_pof2009e2018_pnad2019e2022.rds")) |>
+  df_longer_raw <- readRDS(file.path(dir, "_df_metrics_longer_pof2009e2018_pnad2016e2017e2018e2019e2022.rds")) |>
     #reorder to ensure a more logical order
     dplyr::relocate(
       database,
