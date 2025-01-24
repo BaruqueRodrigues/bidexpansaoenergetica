@@ -339,7 +339,9 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
     . |>
       subset.data.frame(
         database == "pnad" &
-          variable_id != c('EAIR0101', 'EAIR0102')
+          variable_id != c('EAIR0101', 'EAIR0102', 'EADD0101', 'EADD0102', 'EADD0103',
+                             'EADS0101', 'EADS0102', 'EADS0103', 'EADS0105', 'EADS0106', 
+                             'EADS0107')
       )
   )
 
