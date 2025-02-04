@@ -21,7 +21,7 @@
 #' }
 creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/microdados-wider-rds',
                                      exdir = './ETL_pipeline/data/data-output'){
-
+  
   df_wider_comp <- list.files(dir,
                               pattern = '.rds',   # Ler cada arquivo na pasta
                               full.names = T) |>
@@ -60,9 +60,9 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
         return(data)
       }
     )
-
+  
   # Aplicando tratamento para os NA
-  df_wider_amostra <- df_wider_comp |>
+  df_wider <- df_wider_comp |>
     mutate(
       across(starts_with("EA"),
              ~ replace(
@@ -72,26 +72,13 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
              )
       )
     )
-
-  df_wider_ponderado <- df_wider_amostra |>
-    dplyr::group_by(database, time) |>
-    dplyr::mutate(
-      dplyr::across(
-        dplyr::starts_with("EA"),
-        ~ .x * PESO_FINAL / sum(PESO_FINAL)
-      )
-    ) |>
-    dplyr::ungroup()
-
-  wider <- list(df_wider_amostra, df_wider_ponderado)
+  
   #sumarização -----
-
-  wider_stats_BR <- purrr::map2(
-    wider,
+  
+  wider_stats_BR <- purrr::map(
     seq(1:2),
     ~ {
-      df_wider = .x
-      iteration = .y
+      iteration = .x
       data <- df_wider |>
         dplyr::mutate(geo = "country") |>
         dplyr::mutate(geo_value = 0) |>
@@ -129,12 +116,14 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
              # APLICANDO O FATOR DE EXPANSÃO
              data <- data |>
                dplyr::summarise(across(starts_with("EA"),
-                                       list(SUM = ~sum(.x, na.rm = T),
-                                            AVG = ~mean(.x, na.rm = T),
-                                            STD = ~sd(.x, na.rm = T),
-                                            CVR = ~ifelse(mean(.x, na.rm = T) == 0,
-                                                          0,
-                                                          sd(.x, na.rm = T) / mean(.x, na.rm = T)),
+                                       list(SUM = ~sum(.x * PESO_FINAL, na.rm = T),
+                                            AVG = ~Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T),
+                                            STD = ~sqrt(Hmisc::wtd.var(.x, weights = PESO_FINAL, na.rm = T)),
+                                            CVR = ~ifelse(
+                                              Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T) == 0,
+                                              0,
+                                              sqrt(Hmisc::wtd.var(.x, weights = PESO_FINAL, na.rm = T))/Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T)
+                                                        ),
                                             MED = ~Hmisc::wtd.quantile(.x, weights = PESO_FINAL, probs = c(0.50)),
                                             MIN = ~min(.x, na.rm = T),
                                             Q01 = ~Hmisc::wtd.quantile(.x, weights = PESO_FINAL, probs = c(0.25)),
@@ -159,20 +148,19 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
       return(data)
     }
   )
-
+  
   df_wider_stats_BR <- dplyr::left_join(
     wider_stats_BR[[1]],
     wider_stats_BR[[2]]
   )
-
-
-
-  wider_stats_UF <- purrr::map2(
-    wider,
+  
+  
+  
+  wider_stats_UF <- purrr::map(
     seq(1:2),
     ~ {
-      df_wider = .x
-      iteration = .y
+      iteration = .x
+      
       data <- df_wider |>
         dplyr::mutate(geo = "uf") |>
         dplyr::group_by(database, time_period = "year", time, aggregation = 'household', geo, geo_value)
@@ -207,12 +195,14 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                ),
              data <- data |>
                dplyr::summarise(across(starts_with("EA"),
-                                       list(SUM = ~sum(.x, na.rm = T),
-                                            AVG = ~mean(.x, na.rm = T),
-                                            STD = ~sd(.x, na.rm = T),
-                                            CVR = ~ifelse(mean(.x, na.rm = T) == 0,
-                                                          0,
-                                                          sd(.x, na.rm = T) / mean(.x, na.rm = T)),
+                                       list(SUM = ~sum(.x * PESO_FINAL, na.rm = T),
+                                            AVG = ~Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T),
+                                            STD = ~sqrt(Hmisc::wtd.var(.x, weights = PESO_FINAL, na.rm = T)),
+                                            CVR = ~ifelse(
+                                              Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T) == 0,
+                                              0,
+                                              sqrt(Hmisc::wtd.var(.x, weights = PESO_FINAL, na.rm = T))/Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T)
+                                            ),
                                             MED = ~Hmisc::wtd.quantile(.x, weights = PESO_FINAL, probs = c(0.50)),
                                             MIN = ~min(.x, na.rm = T),
                                             Q01 = ~Hmisc::wtd.quantile(.x, weights = PESO_FINAL, probs = c(0.25)),
@@ -237,19 +227,17 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
       return(data)
     }
   )
-
+  
   df_wider_stats_UF <- dplyr::left_join(
     wider_stats_UF[[1]],
     wider_stats_UF[[2]]
   )
-
-
-  wider_stats_RG <- purrr::map2(
-    wider,
+  
+  
+  wider_stats_RG <- purrr::map(
     seq(1:2),
     ~ {
-      df_wider = .x
-      iteration = .y
+      iteration = .x
       data <- df_wider |>
         dplyr::mutate(geo = "region") |>
         dplyr::mutate(geo_value = dplyr::case_when(
@@ -292,12 +280,14 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
                ),
              data <- data |>
                dplyr::summarise(across(starts_with("EA"),
-                                       list(SUM = ~sum(.x, na.rm = T),
-                                            AVG = ~mean(.x, na.rm = T),
-                                            STD = ~sd(.x, na.rm = T),
-                                            CVR = ~ifelse(mean(.x, na.rm = T) == 0,
-                                                          0,
-                                                          sd(.x, na.rm = T) / mean(.x, na.rm = T)),
+                                       list(SUM = ~sum(.x * PESO_FINAL, na.rm = T),
+                                            AVG = ~Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T),
+                                            STD = ~sqrt(Hmisc::wtd.var(.x, weights = PESO_FINAL, na.rm = T)),
+                                            CVR = ~ifelse(
+                                              Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T) == 0,
+                                              0,
+                                              sqrt(Hmisc::wtd.var(.x, weights = PESO_FINAL, na.rm = T))/Hmisc::wtd.mean(.x, weights = PESO_FINAL, na.rm = T)
+                                            ),
                                             MED = ~Hmisc::wtd.quantile(.x, weights = PESO_FINAL, probs = c(0.50)),
                                             MIN = ~min(.x, na.rm = T),
                                             Q01 = ~Hmisc::wtd.quantile(.x, weights = PESO_FINAL, probs = c(0.25)),
@@ -322,12 +312,12 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
       return(data)
     }
   )
-
+  
   df_wider_stats_RG <- dplyr::left_join(
     wider_stats_RG[[1]],
     wider_stats_RG[[2]]
   )
-
+  
   df_wider_stats <-
     df_wider_stats_BR |>
     dplyr::bind_rows(df_wider_stats_UF) |>
@@ -356,11 +346,11 @@ creates_wider_summarized <- function(dir = './ETL_pipeline/data/data-output/micr
             )
         )
     )
-
+  
   df_wider_stats |> dplyr::glimpse()
-
+  
   ### export -----
-
+  
   df_wider_stats |>
     saveRDS(stringr::str_glue("{exdir}/_df_metrics_wider_summarized_by_EA.rds"))
 }
