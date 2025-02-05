@@ -20,8 +20,10 @@ margin-top: 30px;
 }
 ```
 
-## {.tabset}
+##  {.tabset}
+
 ### Volumetria
+
 #### Base longer
 
 ```{r}
@@ -33,14 +35,22 @@ create_stats_longer <- function(var) {
   htmltools::div(
     htmltools::strong(var,": "),
     dplyr::n_distinct(col),
-    "[", glue::glue_collapse(sort(unique(col)), sep = ", "), "]"
+    "[", glue::glue_collapse(sort(unique(col)), sep = ", "), "]",
   ) |> as.character()
+  
 }
 
 c("database", "aggregation", "geo", "geo_value") |> 
   purrr::map_chr(create_stats_longer) |> 
   htmltools::HTML()
 
+```
+
+```{r}
+htmltools::div(
+  htmltools::strong("Número de Colunas: "), ncol(df_longer), htmltools::br(),
+  htmltools::strong("Tamanho da Amostra: "), nrow(df_longer), htmltools::br(),
+)
 ```
 
 ```{r}
@@ -146,7 +156,6 @@ df_longer |>
 
 ```
 
-
 #### Lista de determinantes na base longer
 
 ```{r}
@@ -163,7 +172,6 @@ df_longer |>
   DT::datatable(rownames = F, escape = F)
 
 ```
-
 
 #### Lista de níveis x determinantes na base longer
 
@@ -184,6 +192,7 @@ df_longer |>
 ```
 
 ### Resultados
+
 #### Filtros
 
 ```{r}
@@ -304,4 +313,4 @@ htmltools::div(
 
 ```
 
-## {-}
+##  {.unnumbered}
