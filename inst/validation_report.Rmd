@@ -63,7 +63,7 @@ htmltools::div(
 #### Bases wider
 
 ```{r}
-
+  
 create_stats_wider <- function(data, longer) {
   det_longer <- longer |> 
     dplyr::filter(var_filtro_nome != "all_values") |> 
@@ -88,6 +88,10 @@ create_stats_wider <- function(data, longer) {
   
   htmltools::div(
     htmltools::h5(unique(data$database)),
+    htmltools::h5(unique(data$time)),
+    
+    htmltools::strong("Número de colunas: "),
+    ncol(data), htmltools::br(),
     
     htmltools::strong("Tamanho da amostra: "),
     nrow(data), htmltools::br(),
