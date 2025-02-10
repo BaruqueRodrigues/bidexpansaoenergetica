@@ -127,7 +127,10 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
     }
   }
 
-  temp <- data
+  temp <- data |>
+      dplyr::mutate(
+        UF = as.character(UF)
+      )
 
   (file <- paste0("df_", database_name, database_year,
                   "_nInd", length(indicator_columns),
