@@ -97,8 +97,7 @@ create_stats_wider <- function(data, longer) {
   ind_diff <- glue::glue_collapse(sort(ind_diff), sep = ", ")
   
   htmltools::div(
-    htmltools::h5(unique(data$database)),
-    htmltools::h5(unique(data$time)),
+    htmltools::h5(unique(data$database), unique(data$time)),
     
     htmltools::strong("Número de colunas: "),
     ncol(data), htmltools::br(),
@@ -140,7 +139,7 @@ df_wider |>
 
 ```
 
-#### Lista de determinantes na base longer
+#### Lista de indicadores na base longer
 
 ```{r}
 

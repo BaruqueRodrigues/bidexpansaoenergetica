@@ -257,7 +257,7 @@ create_indicator_data <- function(path, database, year, indicator,
       grepl("^5", as.character(UF)) == TRUE ~ 5, #Centro Oeste
       TRUE ~ 100 #valor se erro
     ))
-  determinant_columns <- dataset |> colnames() |> stringr::str_subset("D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_individual_REG_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -314,7 +314,7 @@ create_indicator_data <- function(path, database, year, indicator,
     dplyr::mutate(PESO_FINAL = PESO_FINAL * NUMERO_PESSOAS_DOMICILIO) |>
     dplyr::select(-NUMERO_PESSOAS_DOMICILIO) |>
     dplyr::mutate(UF = 0)
-  determinant_columns <- dataset |> colnames() |> stringr::str_subset("D[:alpha:][:digit:]{4}")
+  determinant_columns <- dataset |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
 
   #applying the aggregation function
   df_longer_individual_BRA_filtered <- bidexpansaoenergetica::calculate_indicators(
@@ -388,7 +388,7 @@ create_indicator_data <- function(path, database, year, indicator,
 
 
   df_longer_Agg <- df_longer_Agg |>
-    dplyr::mutate(indicador_final_proporcao = indicador_p_ponderado * 100,
+    dplyr::mutate(indicador_final_percentual = indicador_p_ponderado * 100,
                   var_filtro_niveis = dplyr::case_when(
                     is.na(var_filtro_niveis) ~ "all_values",
                     .default = var_filtro_niveis
@@ -413,7 +413,7 @@ create_indicator_data <- function(path, database, year, indicator,
       ref_total_populacao_n_ponderado,
       indicador_p_ponderado_c,
       indicador_p_ponderado,
-      indicador_final_proporcao
+      indicador_final_percentual
     )
 
   #check: geo by var_filtro and indicador

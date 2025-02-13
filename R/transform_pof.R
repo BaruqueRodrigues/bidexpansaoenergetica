@@ -1014,7 +1014,10 @@ transform_pof <- function(pof_data, pof_year){
       ) %>%
       # Add Table Domicílio
       dplyr::left_join(data$Domicílio, by = join_by(UF, COD_UPA, NUM_DOM, PESO_FINAL)) %>%
-      dplyr::mutate(dplyr::across(c(V0215, V02101, V02102, V02103), ~tidyr::replace_na(.x, 0)))
+      dplyr::mutate(dplyr::across(c(V0215, V02101, V02102, V02103), ~tidyr::replace_na(.x, 0))) |>
+      dplyr::mutate(
+        UF = as.character(UF)
+      )
 
   }
 
@@ -1061,7 +1064,10 @@ transform_pof <- function(pof_data, pof_year){
       dplyr::left_join(data$`Outras Despesas`, join_by(UF == COD_UF, COD_UPA, NUM_DOM, NUM_UC, PESO_FINAL)) %>%
       dplyr::mutate(dplyr::across(contains("DC_V9001"), ~tidyr::replace_na(.x,0))) %>%
       dplyr::select(-COD_UF) %>%
-      dplyr::relocate(UF)
+      dplyr::relocate(UF) |>
+      dplyr::mutate(
+        UF = as.character(UF)
+      )
   }
 
   data_transformed

@@ -23,7 +23,7 @@ save_wider <- function(data_wider, database_name, database_year, exdir = list(rd
                                                                               csv = "ETL_pipeline/data/data-output/microdados-wider-csv/")){
 
   # Counting number of determinants, indicators and statistics columns
-  determinant_columns <- data_wider |> colnames() |> stringr::str_subset("D[:alpha:][:digit:]{4}")
+  determinant_columns <- data_wider |> colnames() |> stringr::str_subset("^D[:alpha:][:digit:]{4}")
   indicator_columns <- data_wider |> colnames() |> stringr::str_subset("^I[:alpha:][:digit:]{4}")
   estatisticas_columns <- data_wider |> colnames() |> stringr::str_subset("^EA[:alpha:]{2}[:digit:]{4}")
 
