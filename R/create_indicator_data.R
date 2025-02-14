@@ -414,6 +414,11 @@ create_indicator_data <- function(path, database, year, indicator,
       indicador_p_ponderado_c,
       indicador_p_ponderado,
       indicador_final_percentual
+    ) |>
+    dplyr::mutate(
+      indicador_p_ponderado_c = replace(indicador_p_ponderado_c, is.nan(indicador_p_ponderado_c), 0),
+      indicador_p_ponderado = replace(indicador_p_ponderado, is.nan(indicador_p_ponderado), 0),
+      indicador_final_percentual = replace(indicador_final_percentual, is.na(indicador_final_percentual), 0)
     )
 
   #check: geo by var_filtro and indicador
