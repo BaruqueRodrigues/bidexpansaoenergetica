@@ -150,7 +150,10 @@ calculate_indicators <- function(dataset, determinant_columns,
         indicador_n_ponderado_c = sum(indicador_n_ponderado_c, na.rm = TRUE),
         #gambi para garantir 1 - de final value
         #indicador_p_ponderado_old = 1 - (indicador_n_ponderado_c_old/ ref_total_n_ponderado),
-        indicador_p_ponderado = 1 - (indicador_n_ponderado_c/ ref_determinante_niveis_n_ponderado),
+        indicador_p_ponderado = ifelse(stringr::str_detect(indicador_nome[1],"^IR[:digit:]{4}"),
+                                       1 - (indicador_n_ponderado_c/ ref_determinante_niveis_n_ponderado_IR),
+                                       1 - (indicador_n_ponderado_c/ ref_determinante_niveis_n_ponderado)
+        ),
         #to-do: adjust the 1-complementar vs. calcular diretamente o valor do indicador
         time = year,
         time_period = time_period
