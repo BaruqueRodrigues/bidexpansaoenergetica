@@ -103,8 +103,10 @@ create_longer_summarized <- function(dir = './ETL_pipeline/data/data-output',
                   -ref_total_populacao_n_ponderado) |>
     dplyr::mutate(
       dist_var_filtro_niveis_p_ponderado = dplyr::case_when(
-        indicador_nome == "all_values" ~ ref_var_filtro_niveis_n_ponderado /ref_total_filtro_and_indicator_n_ponderado,
-        indicador_nome != "all_values" ~ indicador_n_ponderado /ref_total_filtro_and_indicator_n_ponderado
+        indicador_nome == "all_values" & ref_total_filtro_and_indicator_n_ponderado != 0 ~ ref_var_filtro_niveis_n_ponderado /ref_total_filtro_and_indicator_n_ponderado,
+        indicador_nome == "all_values" & ref_total_filtro_and_indicator_n_ponderado == 0 ~ 0,
+        indicador_nome != "all_values" & ref_total_filtro_and_indicator_n_ponderado != 0 ~ indicador_n_ponderado /ref_total_filtro_and_indicator_n_ponderado,
+        indicador_nome != "all_values" & ref_total_filtro_and_indicator_n_ponderado == 0 ~ 0
       )
     )
 
