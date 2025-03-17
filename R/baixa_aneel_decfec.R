@@ -34,7 +34,7 @@
 #' @import RSelenium
 #' @export
 
-export_aneel_decfec_data <- function(date = NULL){
+baixa_aneel_decfec <- function(date = NULL){
 
   # Diretório de download:
   download_dir <- normalizePath(file.path(getwd(), "data"))
