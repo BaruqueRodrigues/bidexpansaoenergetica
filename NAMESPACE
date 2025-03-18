@@ -2,7 +2,12 @@
 
 export(agg_by_uf)
 export(baixa_aneel_decfec)
+export(baixa_aneel_samp)
 export(baixa_censo)
+export(baixa_epe_simples)
+export(baixa_mds_auxgas)
+export(baixa_mme_lpt)
+export(baixa_pibm)
 export(baixa_pof)
 export(baixa_visita_1_pnadc)
 export(baixa_visita_5_pnadc)
