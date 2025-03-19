@@ -15,7 +15,7 @@ A função não retorna um valor explicitamente, mas como efeito colateral,
 arquivos são baixados e extraídos nos diretórios especificados.
 }
 \description{
-Essa função é responsável por baixar os dados ddo Anuário Estatístico de Energia Elétrica
+Essa função é responsável por baixar os dados do Anuário Estatístico de Energia Elétrica
 da EPE. Os arquivos são baixados diretamente do repositório dos Dados Abertos da EPE
 e salvo no diretório destinado.
 }
