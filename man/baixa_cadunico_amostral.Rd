@@ -4,11 +4,13 @@
 \alias{baixa_cadunico_amostral}
 \title{Baixa CadÚnico}
 \usage{
-baixa_cadunico_amostral(destination_dir = "data_raw/cadunico/")
+baixa_cadunico_amostral(destination_dir = "data_raw/cadunico/", ano = NULL)
 }
 \arguments{
 \item{destination_dir}{O caminho do diretório base onde os dados serão salvos. Por padrão,
 é 'data_raw/cadunico/'.}
+
+\item{ano}{Ano de referência dos dados a serem baixados.}
 }
 \value{
 A função não retorna um valor explicitamente, mas como efeito colateral,
