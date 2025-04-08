@@ -67,23 +67,20 @@ baixa_aneel_perdas <- function() {
   message("Acessando portal da ANEEL...")
   url <- "https://portalrelatorios.aneel.gov.br/luznatarifa/perdasenergias"
   remDr$navigate(url)
-  Sys.sleep(6)
+  Sys.sleep(5)
+
+  message("Selecionando painel 'Base de Dados de Perdas de Energia - Processos Tarifários'")
+  remDr$findElement(using = 'css selector', 'li.active:nth-child(4)')$clickElement()
+  Sys.sleep(5)
 
   message("Entrando no iframe do Power BI...")
   iframe <- remDr$findElement(using = "css selector", '#embedContainer > iframe:nth-child(1)')
   remDr$switchToFrame(iframe)
   Sys.sleep(3)
 
-  message("Selecionando todos os anos...")
-  remDr$findElement(using = 'css selector', 'visual-container.visual-container-component:nth-child(7) > transform:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > div:nth-child(1) > visual-modern:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > i:nth-child(2)')$clickElement()
-  Sys.sleep(5)
-  remDr$findElement(using = "css selector", ".partiallySelected > span:nth-child(1)")$clickElement()
-  Sys.sleep(2)
-  remDr$findElement(using = 'css selector', 'visual-container.visual-container-component:nth-child(7) > transform:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > div:nth-child(1) > visual-modern:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1) > i:nth-child(2)')$clickElement()
-
-  message("Interagindo com o gráfico...")
-  grafico <- remDr$findElement(using = "css selector", 'visual-container.visual-container-component:nth-child(13) > transform:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h3:nth-child(1)')$getElementLocationInView() |> as.integer()
-  remDr$mouseMoveToLocation(x = grafico[1], y = grafico[2])
+  message("Interagindo com a tabela...")
+  tabela <- remDr$findElement(using = "css selector", '.interactive-grid')$getElementLocationInView() |> as.integer()
+  remDr$mouseMoveToLocation(x = tabela[1], y = tabela[2])
   Sys.sleep(1)
   remDr$buttondown()
   Sys.sleep(2)
@@ -97,7 +94,7 @@ baixa_aneel_perdas <- function() {
   Sys.sleep(2)
 
   message("Baixando arquivo...")
-  remDr$findElement(using = 'css selector', 'button.mat-focus-indicator:nth-child(1)')$clickElement()
+  remDr$findElement(using = 'css selector', 'button.pbi-modern-button:nth-child(1)')$clickElement()
   Sys.sleep(10)
 
   message("Download concluído!")
