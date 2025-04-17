@@ -7,7 +7,7 @@
 baixa_aneel_perdas <- function() {
   message("Criando diretório temporário para perfil do Firefox...")
   # Diretório de download:
-  download_dir <- normalizePath(file.path(getwd(), "data"))
+  download_dir <- normalizePath(file.path(getwd(), "data_raw/aneel_perdas"))
 
   # Verificar se o diretório existe, se não, criar
   if (!dir.exists(download_dir)) {
@@ -69,14 +69,31 @@ baixa_aneel_perdas <- function() {
   remDr$navigate(url)
   Sys.sleep(5)
 
-  message("Selecionando painel 'Base de Dados de Perdas de Energia - Processos Tarifários'")
-  remDr$findElement(using = 'css selector', 'li.active:nth-child(4)')$clickElement()
-  Sys.sleep(5)
-
   message("Entrando no iframe do Power BI...")
   iframe <- remDr$findElement(using = "css selector", '#embedContainer > iframe:nth-child(1)')
   remDr$switchToFrame(iframe)
   Sys.sleep(3)
+
+  # Acessando a Base de Dados do Comparativo
+  remDr$findElement(
+    using = "css selector",
+    "visual-container.visual-container-component:nth-child(8) > transform:nth-child(1) > div:nth-child(1)"
+  )$clickElement()
+  Sys.sleep(5)
+
+  # Selecionando todos os anos
+  ano_selecao <- remDr$findElement(
+    using = "css selector",
+    'visual-container.visual-container-component:nth-child(7) > transform:nth-child(1) > div:nth-child(1) > div:nth-child(6) > div:nth-child(1) > div:nth-child(1) > visual-modern:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(1)')$getElementLocationInView() |> as.integer()
+  remDr$mouseMoveToLocation(x = ano_selecao[1], y = ano_selecao[2])
+  Sys.sleep(2)
+
+  # Clicando para selecionar todos os anos
+  remDr$findElement(
+    using = "css selector",
+    "div.visualContent:nth-child(7) > div:nth-child(1) > div:nth-child(1) > visual-modern:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+  )$clickElement()
+  Sys.sleep(10)
 
   message("Interagindo com a tabela...")
   tabela <- remDr$findElement(using = "css selector", '.interactive-grid')$getElementLocationInView() |> as.integer()
@@ -84,14 +101,15 @@ baixa_aneel_perdas <- function() {
   Sys.sleep(1)
   remDr$buttondown()
   Sys.sleep(2)
+  remDr$doubleclick()
 
   message("Abrindo menu de exportação...")
-  remDr$findElement(using = 'css selector', '.vcMenuBtn')$clickElement()
+  remDr$findElement(using = 'css selector', '.pbi-glyph-more')$clickElement()
   Sys.sleep(2)
 
   message("Selecionando opção de exportar dados...")
   remDr$findElement(using = 'css selector', '.pbi-glyph-export')$clickElement()
-  Sys.sleep(2)
+  Sys.sleep(5)
 
   message("Baixando arquivo...")
   remDr$findElement(using = 'css selector', 'button.pbi-modern-button:nth-child(1)')$clickElement()

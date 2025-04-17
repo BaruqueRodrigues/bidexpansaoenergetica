@@ -88,7 +88,7 @@ export_table <- function(remDr, nivel){
   # Baixando os dados
   remDr$findElement(
     using = 'css selector',
-    'button.mat-focus-indicator:nth-child(1)'
+    'button.pbi-modern-button:nth-child(1)'
   )$clickElement()
 
   Sys.sleep(3)

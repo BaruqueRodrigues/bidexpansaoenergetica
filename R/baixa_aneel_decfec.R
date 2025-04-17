@@ -37,7 +37,7 @@
 baixa_aneel_decfec <- function(date = NULL){
 
   # Diretório de download:
-  download_dir <- normalizePath(file.path(getwd(), "data"))
+  download_dir <- normalizePath(file.path(getwd(), "data_raw"))
 
   # Verificar se o diretório existe, se não, criar
   if (!dir.exists(download_dir)) {

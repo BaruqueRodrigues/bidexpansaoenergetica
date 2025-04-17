@@ -83,7 +83,7 @@ baixa_preco_glp <- function(destination_dir = 'data_raw/preco_glp', ano_inicial 
   )
   readr::write_csv(
     data,
-    stringr::str_glue('{destination_dir}/{file_name}.rds')
+    stringr::str_glue('{destination_dir}/{file_name}.csv')
   )
 
 }
