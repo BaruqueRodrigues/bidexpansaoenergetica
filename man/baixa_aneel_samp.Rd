@@ -4,11 +4,13 @@
 \alias{baixa_aneel_samp}
 \title{Baixa ANEEL - SAMP (Balanço Energético)}
 \usage{
-baixa_aneel_samp(destination_dir = "data_raw/aneel_samp")
+baixa_aneel_samp(destination_dir = "data_raw/aneel_samp", year = NULL)
 }
 \arguments{
 \item{destination_dir}{O caminho do diretório base onde os dados serão salvos. Por padrão,
 é 'data_raw/aneel_samp/'.}
+
+\item{year}{Ano de interesse dos dados. Se for NULL, baixará os dados para todos os anos.}
 }
 \value{
 A função não retorna um valor explicitamente, mas como efeito colateral,
