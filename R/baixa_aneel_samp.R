@@ -72,7 +72,7 @@ baixa_aneel_samp <- function(destination_dir = 'data_raw/aneel_samp', year = NUL
   )
 
   # Seleção de colunas e filtros aplicados aos dados
-  column_select <- c("DatCompetencia", "SigAgenteDistribuidora", "NomTipoMercado", "DscModalidadeTarifaria",
+  column_select <- c("DatCompetencia", "SigAgenteDistribuidora", "NomAgenteDistribuidora","NomTipoMercado", "DscModalidadeTarifaria",
                      "DscSubGrupoTarifario", "DscClasseConsumoMercado", "DscSubClasseConsumidor",
                      "DscDetalheMercado", "VlrMercado")
   NomTipoMercado_filter <- c("Regular", "Sistema Isolado - Regular", "Sistema Isolado - Refaturamento",
