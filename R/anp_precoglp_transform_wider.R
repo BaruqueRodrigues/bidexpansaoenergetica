@@ -87,7 +87,8 @@ anp_precoglp_transform_wider  <- function(dir= "data_raw/preco_glp/", file_name 
           AVG = ~mean(.x, na.rm = T)
         ),
         .names = "{.col}_{.fn}"
-      )
+      ),
+      .groups = "drop"
     ) |>
     dplyr::mutate(
       geo = "country"
@@ -113,7 +114,8 @@ anp_precoglp_transform_wider  <- function(dir= "data_raw/preco_glp/", file_name 
           AVG = ~mean(.x, na.rm = T)
         ),
         .names = "{.col}_{.fn}"
-      )
+      ),
+      .groups = "drop"
     ) |>
     dplyr::mutate(
       geo = "region"
@@ -139,14 +141,15 @@ anp_precoglp_transform_wider  <- function(dir= "data_raw/preco_glp/", file_name 
           AVG = ~mean(.x, na.rm = T)
         ),
         .names = "{.col}_{.fn}"
-      )
+      ),
+      .groups = "drop"
     ) |>
     dplyr::mutate(
       geo = "uf"
     )
 
 
-  #Tabela final summarizada:
+  #Tabela wider final:
   anp_precoglp_wider <- preco_glp_br |>
     dplyr::bind_rows(preco_glp_reg) |>
     dplyr::bind_rows(preco_glp_uf)|>
