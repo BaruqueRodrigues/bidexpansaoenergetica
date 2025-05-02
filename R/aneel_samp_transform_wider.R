@@ -115,8 +115,25 @@ aneel_samp_transform_wider <- function(dir = "data_raw/aneel_samp",
       TE_social_com_imposto_media_uf = mean(TE_social_com_imposto, na.rm = T),
       energia_te_uf = sum(energia_te_k_wh, na.rm = T),
       tarifa_sum_uf = sum(tarifa_sum_dist, na.rm = T),
-      tarifa_media_uf = tarifa_sum_uf/energia_te_uf
-    )
+      tarifa_media_com_imposto_uf = tarifa_sum_uf/energia_te_uf,
+      tarifa_media_sem_imposto_uf = sum(TE_sem_imposto * energia_te_dist, na.rm = T)/energia_te_uf,
+      tarifa_social_media_com_imposto_uf = sum(TE_social_com_imposto * energia_te_dist, na.rm = T)/energia_te_uf,
+      tarifa_social_media_sem_imposto_uf = sum(TE_social_sem_imposto * energia_te_dist, na.rm = T)/energia_te_uf
+    ) |>
+    dplyr::group_by(
+      dat_competencia, uf, dsc_modalidade_tarifaria, dsc_sub_grupo_tarifario, dsc_classe_consumo_mercado
+    ) |>
+    dplyr::summarise(
+      TE_sem_imposto_media_uf = mean(TE_sem_imposto_media_uf, na.rm = T),
+      TE_com_imposto_media_uf = mean(TE_com_imposto_media_uf, na.rm = T),
+      TE_social_sem_imposto_media_uf = mean(TE_social_sem_imposto_media_uf, na.rm = T),
+      TE_social_com_imposto_media_uf = mean(TE_social_com_imposto_media_uf, na.rm = T),
+      tarifa_media_sem_imposto_uf = mean(tarifa_media_sem_imposto_uf, na.rm = T),
+      tarifa_media_com_imposto_uf = mean(tarifa_media_com_imposto_uf, na.rm = T),
+      tarifa_social_media_sem_imposto_uf = mean(tarifa_social_media_sem_imposto_uf, na.rm = T),
+      tarifa_social_media_com_imposto_uf = mean(tarifa_social_media_com_imposto_uf, na.rm = T)
+    ) |>
+    dplyr::ungroup()
 
   aneel_samp |> dplyr::glimpse()
 
