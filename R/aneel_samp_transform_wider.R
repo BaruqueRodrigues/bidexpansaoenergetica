@@ -31,12 +31,11 @@ aneel_samp_transform_wider <- function(dir = "data_raw/aneel_samp",
     janitor::clean_names() |>
     dplyr::mutate(
       dat_competencia = as.character(dat_competencia),
-      dsc_sub_classe_consumidor = stringr::str_replace(dsc_sub_classe_consumidor,
-                                                       "Residencial baixa renda – faixa \\d{2}",
-                                                       "Residencial baixa renda")
+      database = "aneel_samp",
+      time_period = "year"
     ) |>
     dplyr::group_by(
-      dat_competencia, sig_agente_distribuidora, dsc_modalidade_tarifaria,
+      database, time_period, dat_competencia, sig_agente_distribuidora, dsc_modalidade_tarifaria,
       dsc_sub_grupo_tarifario, dsc_classe_consumo_mercado, dsc_sub_classe_consumidor,
       dsc_detalhe_mercado
     ) |>
