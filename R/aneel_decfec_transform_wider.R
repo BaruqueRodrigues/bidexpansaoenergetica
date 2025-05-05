@@ -25,9 +25,13 @@ aneel_decfec_transform_wider <- function(data_dir = "data_raw/decfec"){
         head(-2) |>
         dplyr::mutate(
           geo = "country",
-          geo_value = "0"
+          geo_value = "0",
+          database = "aneel_decfec",
+          time_period = "year"
         ) |>
         dplyr::relocate(
+          database,
+          time_period,
           geo,
           geo_value,
           .before = Ano
@@ -50,9 +54,13 @@ aneel_decfec_transform_wider <- function(data_dir = "data_raw/decfec"){
                                         "Centro Oeste" ~ "3",
                                         "Sudeste" ~ "4",
                                         "Sul" ~ "5"),
-          Ano = as.character(Ano)
+          Ano = as.character(Ano),
+          database = "aneel_decfec",
+          time_period = "year"
         ) |>
         dplyr::relocate(
+          database,
+          time_period,
           geo,
           geo_value,
           .before = Ano
@@ -99,9 +107,13 @@ aneel_decfec_transform_wider <- function(data_dir = "data_raw/decfec"){
                                         "TO" ~ "17"
           ),
           geo = "UF",
-          Ano = as.character(Ano)
+          Ano = as.character(Ano),
+          database = "aneel_decfec",
+          time_period = "year"
         ) |>
         dplyr::relocate(
+          database,
+          time_period,
           geo,
           geo_value,
           .before = Ano

@@ -18,11 +18,13 @@
 aneel_perdas_transform_wider <- function(dir = "data_raw/aneel_perdas/"){
   # Carregando os dados
   aneel_perdas_wider <- list.files(dir,
-                             full.names = T) |>
+                                   full.names = T) |>
     readxl::read_xlsx() |>
     janitor::clean_names() |>
     tidyr::drop_na(ano) |>
     dplyr::mutate(
+      database = "aneel_perdas",
+      time_period = "year",
       uf = dplyr::case_match(
         uf,
         "RO" ~ "11",
@@ -59,6 +61,10 @@ aneel_perdas_transform_wider <- function(dir = "data_raw/aneel_perdas/"){
                                  "CENTRO OESTE" ~ "3",
                                  "SUDESTE" ~ "4",
                                  "SUL" ~ "5")
+    ) |>
+    dplyr::relocate(
+      database, time_period, ano, regiao, uf,
+      .before = distribuidora
     )
 
   aneel_perdas_wider |> dplyr::glimpse()
