@@ -15,11 +15,11 @@
 #'
 #' @examples
 #' \dontrun{
-#'   baixa_preco_glp(
+#'   baixa_anp_precoglp(
 #'     destination_dir = 'data_raw/preco_glp'
 #'   )
 #' }
-baixa_preco_glp <- function(destination_dir = 'data_raw/preco_glp', ano_inicial = 2004, ano_final = 2024){
+baixa_anp_precoglp <- function(destination_dir = 'data_raw/preco_glp', ano_inicial = 2004, ano_final = 2024){
 
   # Define a função para configurar a localidade baseada no sistema operacional
   set_locale_based_on_os <- function() {
