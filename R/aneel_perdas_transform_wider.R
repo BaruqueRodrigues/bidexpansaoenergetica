@@ -58,9 +58,9 @@ aneel_perdas_transform_wider <- function(dir = "data_raw/aneel_perdas/"){
       regiao = dplyr::case_match(regiao,
                                  "NORTE" ~ "1",
                                  "NORDESTE" ~ "2",
-                                 "CENTRO OESTE" ~ "3",
-                                 "SUDESTE" ~ "4",
-                                 "SUL" ~ "5")
+                                 "CENTRO OESTE" ~ "5",
+                                 "SUDESTE" ~ "3",
+                                 "SUL" ~ "4")
     ) |>
     dplyr::relocate(
       database, time_period, ano, regiao, uf,
