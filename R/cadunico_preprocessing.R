@@ -23,7 +23,7 @@ cadunico_preprocessing <- function(cadunico_familias_raw_data,
                                    cadunico_pessoas_raw_data,
                                    ano = "2022"){
 
-  cadunico_transformed <- cadunico_raw_data |>
+  cadunico_transformed <- cadunico_pessoas_raw_data |>
     dplyr::select(-CD_IBGE_CADASTRO) |>
     dplyr::left_join(
       cadunico_familias_raw_data
