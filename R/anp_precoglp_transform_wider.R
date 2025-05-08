@@ -15,7 +15,6 @@
 #' }
 anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name = "preco_glp_2004_2024.rds") {
 
-
   file_path <- system.file(dir, file_name, package = "bidexpansaoenergetica")
 
   region_map <- tibble::tibble(
@@ -47,10 +46,11 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
     dplyr::summarise(
       valor_de_venda_AVG = mean(valor_de_venda),
       valor_de_venda_MED = median(valor_de_venda),
-      valor_de_venda_SD = sd(valor_de_venda),
       valor_de_venda_FIRST = first(valor_de_venda),
       valor_de_venda_LAST = last(valor_de_venda),
       valor_de_venda_COUNT = dplyr::n(),
+      valor_de_venda_SD = sd(valor_de_venda,  na.rm = TRUE),
+      valor_de_venda_CV = (valor_de_venda_SD / valor_de_venda_AVG) * 100,
       .groups = "drop"
     ) |>
 
@@ -70,7 +70,8 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
                   valor_de_venda_FIRST,
                   valor_de_venda_LAST,
                   valor_de_venda_COUNT,
-                  valor_de_venda_SD)
+                  valor_de_venda_SD,
+                  valor_de_venda_CV)
 
   return (anp_precoglp_wider)
 }
