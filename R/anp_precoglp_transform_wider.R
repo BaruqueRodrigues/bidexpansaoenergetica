@@ -39,7 +39,7 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
     janitor::clean_names() |>
     dplyr::mutate(
       data_da_coleta = lubridate::dmy(data_da_coleta),
-      ano = lubridate::year(data_da_coleta),
+      ano = as.character(lubridate::year(data_da_coleta)),
     )|>
     dplyr::group_by(regiao_sigla, estado_sigla, cnpj_da_revenda, ano) |>
     dplyr::arrange(data_da_coleta, .by_group = TRUE) |>
