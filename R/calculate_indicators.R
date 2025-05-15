@@ -131,7 +131,7 @@ calculate_indicators <- function(dataset, determinant_columns,
       # pull(Total_Peso)/(length(determinant_columns) * length(indicator_columns))
       dplyr::summarise(
         .by = all_of(pond_indic),
-        indicador_n_amostra_c = sum(indicador_binario),
+        indicador_n_amostra_c = sum(indicador_binario, na.rm = T),
         indicador_n_amostra = length(indicador_binario) - indicador_n_amostra_c,
         ref_total_n_amostra = indicador_n_amostra_c + indicador_n_amostra,
         #to-do: um teste, o valor ref_total_n_amostra deveria ser sempre igual ao tamanho da amostra inicial
@@ -216,7 +216,7 @@ calculate_indicators <- function(dataset, determinant_columns,
       # pull(Total_Peso)/(length(determinant_columns) * length(indicator_columns))
       dplyr::summarise(
         .by = all_of(pond_indic),
-        indicador_n_amostra_c = sum(indicador_binario),
+        indicador_n_amostra_c = sum(indicador_binario, na.rm = T),
         indicador_n_amostra = length(indicador_binario) - indicador_n_amostra_c,
         ref_total_n_amostra = indicador_n_amostra_c + indicador_n_amostra,
         #to-do: um teste, o valor ref_total_n_amostra deveria ser sempre igual ao tamanho da amostra inicial
