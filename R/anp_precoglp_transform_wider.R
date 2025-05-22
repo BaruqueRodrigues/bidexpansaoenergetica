@@ -41,17 +41,8 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
       data_da_coleta = lubridate::dmy(data_da_coleta),
       ano = as.character(lubridate::year(data_da_coleta)),
     )|>
-    dplyr::group_by(regiao_sigla, estado_sigla, cnpj_da_revenda, ano) |>
-    dplyr::arrange(data_da_coleta, .by_group = TRUE) |>
-    dplyr::summarise(
-      valor_de_venda_AVG = mean(valor_de_venda),
-      valor_de_venda_MED = median(valor_de_venda),
-      valor_de_venda_FIRST = first(valor_de_venda),
-      valor_de_venda_LAST = last(valor_de_venda),
-      valor_de_venda_COUNT = dplyr::n(),
-      valor_de_venda_SD = sd(valor_de_venda,  na.rm = TRUE),
-      valor_de_venda_CV = (valor_de_venda_SD / valor_de_venda_AVG) * 100,
-      .groups = "drop"
+    dplyr::arrange(cnpj_da_revenda,
+                   data_da_coleta
     ) |>
 
     dplyr::mutate(
@@ -65,13 +56,6 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
                   region, uf,
                   time_period, time,
                   cnpj_da_revenda,
-                  valor_de_venda_AVG,
-                  valor_de_venda_MED,
-                  valor_de_venda_FIRST,
-                  valor_de_venda_LAST,
-                  valor_de_venda_COUNT,
-                  valor_de_venda_SD,
-                  valor_de_venda_CV)
-
-  return (anp_precoglp_wider)
+                  valor_de_venda) |>
+    unique()
 }
