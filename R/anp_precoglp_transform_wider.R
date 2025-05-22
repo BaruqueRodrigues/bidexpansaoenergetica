@@ -56,6 +56,5 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
                   region, uf,
                   time_period, time,
                   cnpj_da_revenda,
-                  valor_de_venda) |>
-    unique()
+                  valor_de_venda)
 }
