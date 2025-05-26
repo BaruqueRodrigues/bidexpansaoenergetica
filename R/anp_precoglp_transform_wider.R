@@ -65,10 +65,14 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
 
     dplyr::summarise(
       quantidade_coletas = dplyr::n(),
-      valor_de_venda_FIRST = first(valor_de_venda),
-      valor_de_venda_MED = median(valor_de_venda),
-      valor_de_venda_LAST = last(valor_de_venda),
       valor_de_venda_AVG = mean(valor_de_venda),
+      valor_de_venda_MED = median(valor_de_venda),
+      valor_de_venda_FIRST = first(valor_de_venda),
+      valor_de_venda_LAST = last(valor_de_venda),
+      valor_de_venda_MIN = min(valor_de_venda, na.rm = TRUE),
+      valor_de_venda_MAX = max(valor_de_venda, na.rm = TRUE),
+      valor_de_venda_RANGE = (valor_de_venda_MAX - valor_de_venda_MIN),
+      valor_de_venda_STD = sd(valor_de_venda, na.rm = TRUE),
       valor_de_venda_WSUM = sum(valor_de_venda*quantidade_coletas),
       .groups = "drop"
     ) |>
@@ -87,10 +91,14 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
                   time,
                   cnpj_da_revenda,
                   quantidade_coletas,
-                  valor_de_venda_FIRST,
-                  valor_de_venda_MED,
-                  valor_de_venda_LAST,
                   valor_de_venda_AVG,
+                  valor_de_venda_MED,
+                  valor_de_venda_FIRST,
+                  valor_de_venda_LAST,
+                  valor_de_venda_MIN,
+                  valor_de_venda_MAX,
+                  valor_de_venda_RANGE,
+                  valor_de_venda_STD,
                   valor_de_venda_WSUM
     )
 }
