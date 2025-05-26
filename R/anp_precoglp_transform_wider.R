@@ -36,13 +36,41 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
   )
 
   anp_precoglp_wider <- readRDS(file_path) |>
+
     janitor::clean_names() |>
+
+    dplyr::select(
+      regiao_sigla,
+      estado_sigla,
+      cnpj_da_revenda,
+      data_da_coleta,
+      valor_de_venda
+    )|>
+
     dplyr::mutate(
       data_da_coleta = lubridate::dmy(data_da_coleta),
       ano = as.character(lubridate::year(data_da_coleta)),
     )|>
+
     dplyr::arrange(cnpj_da_revenda,
                    data_da_coleta
+    ) |>
+
+    dplyr::group_by(
+      regiao_sigla,
+      estado_sigla,
+      cnpj_da_revenda,
+      ano
+    ) |>
+
+    dplyr::summarise(
+      quantidade_coletas = dplyr::n(),
+      valor_de_venda_FIRST = first(valor_de_venda),
+      valor_de_venda_MED = median(valor_de_venda),
+      valor_de_venda_LAST = last(valor_de_venda),
+      valor_de_venda_AVG = mean(valor_de_venda),
+      valor_de_venda_WSUM = sum(valor_de_venda*quantidade_coletas),
+      .groups = "drop"
     ) |>
 
     dplyr::mutate(
@@ -53,8 +81,16 @@ anp_precoglp_transform_wider <- function(dir = "data_raw/preco_glp/", file_name 
     dplyr::left_join(region_map, by = "regiao_sigla") |>
     dplyr::left_join(estado_map, by = "estado_sigla") |>
     dplyr::select(database,
-                  region, uf,
-                  time_period, time,
+                  region,
+                  uf,
+                  time_period,
+                  time,
                   cnpj_da_revenda,
-                  valor_de_venda)
+                  quantidade_coletas,
+                  valor_de_venda_FIRST,
+                  valor_de_venda_MED,
+                  valor_de_venda_LAST,
+                  valor_de_venda_AVG,
+                  valor_de_venda_WSUM
+    )
 }
